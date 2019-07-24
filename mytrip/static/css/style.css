@@ -1,0 +1,110 @@
+/*@import url('https://fonts.googleapis.com/css?family=Varela+Round'); */
+@import url(https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,800,900);
+body {
+    /* font-family: 'Varela Round', sans-serif; */
+    font-family: 'Martel Sans', sans-serif;
+}
+.jumbotron {
+    height: 100vh;
+    padding-top: 0px;
+    margin-top: -50px;
+    color: black;
+    background-color: transparent;
+   
+}
+.jumbotron.home::before {
+    content: "";
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;  
+    opacity: .85; 
+    z-index: -10;
+    background-image: url("images/header2.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+.jumbotron.home p {
+    text-shadow: 0px 1px 25px white;
+    font-weight: bolder;
+}
+.jumbotron.home h1 {
+    font-size: 75px;
+
+}
+.jumbotron.planner{
+    height: 100vh;
+}
+.landing {
+    padding-top: 12%;
+}
+.navbar {
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    border: none;
+    border-radius: 0px; 
+    background-color: white; 
+}
+nav {
+    padding-bottom: 0px;
+    border: none;
+    z-index: 999;
+}
+.navbar-default li a {
+    color: black !important;
+}
+.loginbutton {
+    max-width: 15%
+}
+.row h1 {
+    text-align: center;
+}
+.content div {
+    background-color: white;
+}
+footer {
+    background-color: #4F4E43;
+    min-height: 400px;
+}
+footer h2 {
+    color: #E6E2AF;
+}
+#plannertext {
+    padding-top: 8vw;
+}
+a:hover {
+    color: white;
+    text-decoration: none;
+}
+a:focus {
+    color: white ;
+    text-decoration: none ;
+}
+.travelcategory {
+    background: transparent;
+}
+.map {
+    padding-top: 7vw;
+}
+.map img {
+    max-width: 100%;
+}
+.row {
+    padding-top: 55px;
+    height: 100vw;
+}
+.mapPhotos {
+    padding-top: 50px;
+    padding-bottom: 100px;
+}
+.dropdown-menu {
+    z-index: 999;
+}
+.categorybox {
+    padding-top: 15%;
+}
+img {
+    max-height: 100%;
+    max-width: 100%;
+}

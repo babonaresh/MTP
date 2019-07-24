@@ -1,0 +1,42 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Location Finder</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--internet css files -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!--static css files -->
+    <link rel="stylesheet" href="{% static 'css/animations.scss' %}">
+    <link rel="stylesheet" href="{% static 'css/worldmap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styling.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/media-queries.css' %}">
+
+    <!--internet js files -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+   <!--APIs -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcUbUzlOE1t6OIbdZpQx7k1IQgSfUYhmA&callback=initMap"
+    async defer></script>
+
+    <!--static js files -->
+    <script type="text/javascript" src="{% static 'js/jquery.smoothscroll.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/js.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/worldmap.js' %}"></script>
+    <script>
+            $(function() {
+            $('html').smoothScroll(500);
+            });
+    </script>
+
+</head>
+<body id="app-layout" onload="initMap()">
+
+
+</body>
+</html>

@@ -139,6 +139,7 @@ padding : 50px 0;
             <ul class="nav navbar-nav">
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'mytrip:home' %}">Home</a></li>
+                    <li><a href="{% url 'mytrip:location' %}">Location</a></li>
                     <li><a href="{% url 'mytrip:flights' %}">Flights</a></li>
                 <li><a href="{% url 'mytrip:weather' %}">weather</a></li>
                 <!--<li><a href="{% url 'mytrip:home' %}">Food</a></li>-->

@@ -32,26 +32,37 @@
 {{forecast}}
                    {% for city_weather in weather_data %}
 
-  <div class="w3-card-4" style="width:20%; background-color: white">
+  <div class="w3-card-4" style="width:60%; background-color: white">
     <header class="w3-container w3-light-grey" style="align-content: center; background-color: aliceblue">
-      <h3>{{city_weather.city}}</h3>
+      <h2 class="text-center">{{city_weather.city}}</h2>
     </header>
-    <div class="w3-container">
+    <div class="w3-container row">
+        <div class="col-md-1"></div>
+        <div class="col-md-5" style="background-color: white">
       <h4>Temperature: {{city_weather.temperature}}° C </h4>
       <hr>
       <img src="http://openweathermap.org/img/w/{{city_weather.icon}}.png" alt="Image" class="w3-left w3-circle w3-margin-right" style="width:60px">
-      <h5>{{city_weather.description}}</h5><br>
-    </div>
 
+
+        <h5>{{city_weather.description}}</h5>
+        </div>
+      <div class="col-md-5" style="background-color: white">
+        <h5>minimum temperature:{{city_weather.min_temp}}° C</h5>
+        <h5>maximum temperature:{{city_weather.max_temp}}° C</h5>
+        <h5>Wind Speed:{{city_weather.wind}}</h5>
+        <h5>Visibility:{{city_weather.visibility}}</h5>
+        <h5>Humidity:{{city_weather.humidity}}</h5>
+      </div>
   </div>
              <br>
             <br>
 </div>
 
 
-
+<br>
+            <br>
                     {% endfor %}
 
-
+        </div>
 
 {% endblock %}
