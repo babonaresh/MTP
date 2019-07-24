@@ -159,3 +159,7 @@ class flights(TemplateView):
                     'form' : form,
                 }
                 return render(request, self.template_name,context)
+
+def location(request):
+   return render(request, 'mytrip/location.html',
+                 {'mytrip': location})

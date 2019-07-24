@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^password-reset/$', reset, {'post_reset_redirect': '/password-reset/done/',
                                       'email_template_name': 'registration/password_reset_email.html'},
         name='password_reset'),
+    url(r'^location/$', views.location, name='location'),
     ]
