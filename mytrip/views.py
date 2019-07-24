@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import *
-from .forms import LoginForm,UserRegistrationForm, CityForm, FlightsForm
+from .forms import LoginForm,UserRegistrationForm, CityForm, FlightsForm, ZomatoForm
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
@@ -48,8 +48,9 @@ class weather(TemplateView):
             form = CityForm()
             main_api = 'http://api.openweathermap.org/data/2.5/weather?q='
             api_key = '&units=metric&appid=907d8c401b542c8e7ede79a3ddea8f1a'
-            # main_api = 'http://api.openweathermap.org/data/2.5/forecast?q='
-            # api_key = '&units=metric&appid=907d8c401b542c8e7ede79a3ddea8f1a'
+            main_api1 = 'http://api.openweathermap.org/data/2.5/forecast?q='
+            url1 = main_api1 + city + api_key
+            forecast = requests.get(url1).json()
             url= main_api + city + api_key
             json_data= requests.get(url).json()
             if json_data['cod']==200:
@@ -71,6 +72,12 @@ class weather(TemplateView):
                      'form': form,
                 }
                 return render(request, self.template_name, context)
+            elif forecast['cod']==200:
+                context={
+                    'forecast':requests.get(url1).json(),
+                    'form':form,
+                }
+                return render(request, self.template_name, context)
             else:
                 error='Please Check the Name of the City'
                 form= CityForm()
@@ -80,7 +87,32 @@ class weather(TemplateView):
                 }
                 return render(request, self.template_name, context)
 
-
+def forecast(self, request):
+        form = CityForm(request.POST)
+        if form.is_valid():
+            city = form.cleaned_data['city']
+            form = CityForm()
+            # main_api = 'http://api.openweathermap.org/data/2.5/weather?q='
+            # api_key = '&units=metric&appid=907d8c401b542c8e7ede79a3ddea8f1a'
+            main_api = 'http://api.openweathermap.org/data/2.5/forecast?q='
+            api_key = '&units=metric&appid=907d8c401b542c8e7ede79a3ddea8f1a'
+            url= main_api + city + api_key
+            json_data= requests.get(url).json()
+            if json_data['cod']==200:
+                form = CityForm()
+                context = {
+                    'data': json_data,
+                    'form': form,
+                }
+                return render(request, self.template_name, context)
+            else:
+                error='Please Check the Name of the City'
+                form= CityForm()
+                context={
+                    'error':error,
+                    'form' : form,
+                }
+                return render(request, self.template_name, context)
 
 
 
@@ -131,3 +163,29 @@ class flights(TemplateView):
 def location(request):
    return render(request, 'mytrip/location.html',
                  {'mytrip': location})
+
+
+class getzomato(TemplateView):
+    template_name = 'mytrip/getzomato.html'
+
+    def get(self,request):
+        form = ZomatoForm()
+        return render(request, self.template_name, {'form':form})
+
+    def post(self,request):
+        form=ZomatoForm(request.POST)
+        if request.method == 'POST':
+            if form.is_valid():
+                cuisines = form.cleaned_data['cuisines']
+                main_api = 'https://developers.zomato.com/api/v2.1/search?q=' +form.cleaned_data['searchkeyword'] + '&cuisines=' + form.cleaned_data['cuisines']
+                header = {"User-agent": "curl/7.43.0", "Accept": "application/json",
+                          "user_key": "50bf80e7cc40a8869d99583c024cb58a"}
+                response = requests.get(main_api, headers=header)
+                Zomato_data = []
+                form = ZomatoForm
+                context = {
+                    'cuisines':cuisines,
+                    'data': requests.get(main_api, headers=header).json(),
+                    'form': form,
+                    }
+                return render(request, self.template_name, context)

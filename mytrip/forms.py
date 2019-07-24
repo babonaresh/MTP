@@ -39,3 +39,7 @@ class FlightsForm(forms.Form):
     outboundpartialdate = forms.DateField(label='Outbound Date', widget=forms.SelectDateWidget(empty_label="Nothing"), required=True)
     inboundpartialdate = forms.DateField(label='Inbound Date', widget=forms.SelectDateWidget(empty_label="Nothing"), required=True )
 
+class ZomatoForm(forms.Form):
+    searchkeyword = forms.CharField()
+    cuisines = forms.CharField()
+

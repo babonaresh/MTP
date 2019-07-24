@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 from . import views
 from django.views.generic import TemplateView
-from mytrip.views import weather,flights
+from mytrip.views import weather,flights,getzomato
 
 
 
@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^register/$', views.register, name='register'),
     path('flights/', flights.as_view(), name='flights'),
     path('weather/', weather.as_view(), name='weather'),
+    url(r'^getzomato/$', getzomato.as_view(), name='getzomato'),
     url('^password-change/done/$', pwd_change_done, name='password_change_done'),
     url('^password-change/$', pwd_change, {'post_change_redirect': '/password-change/done/'}, name='password_change'),
     url(r'^password-reset/complete/$', reset_complete, name='password_reset_complete'),
@@ -28,4 +29,5 @@ urlpatterns = [
                                       'email_template_name': 'registration/password_reset_email.html'},
         name='password_reset'),
     url(r'^location/$', views.location, name='location'),
+
     ]
