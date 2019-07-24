@@ -77,6 +77,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
+
             ],
         },
     },
@@ -123,18 +126,22 @@ AUTHENTICATION_BACKENDS = [
         'social_core.backends.instagram.InstagramOAuth2',
         'social_core.backends.facebook.FacebookOAuth2',
         'django.contrib.auth.backends.ModelBackend',
-        'django.contrib.auth.backends.ModelBackend',
+        #'django.contrib.auth.backends.ModelBackend',
         'allauth.account.auth_backends.AuthenticationBackend',
     ]
 
 
-#SITE_ID = 1
+SITE_ID =3
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 
 SOCIAL_AUTH_FACEBOOK_KEY = '485485162183661'        # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = 'ba99c25a7b010024f6bcb546bf5519a4'  # App Secret
+
+SOCIAL_AUTH_INSTAGRAM_KEY = '0681f3a44f664392a2554f6e001bdf79'         #Client ID
+SOCIAL_AUTH_INSTAGRAM_SECRET = '4f8701d39f0e407eb8f6d11d1d58dcee'  #Client SECRET
+SOCIAL_AUTH_INSTAGRAM_EXTRA_DATA = [         ("user", "user"),]
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
@@ -186,6 +193,8 @@ STATICFILES_DIRS = (
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+RAPIDAPI_API_KEY = '7a73c4ac47msh496c7d5b0f4c841p15456djsn4acd7e84244b'
 
 try:
     from .local_settings import *

@@ -1,0 +1,59 @@
+{% extends 'mytrip/base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <!--<form action="" method="post">-->
+    <!--<label for="l_box1"><input type="radio" name="display_type" value="one" id="l_box1">One Way</label>-->
+    <!--<label for="d_box2"><input type="radio" name="display_type" value="two" id="d_box2">Two Way</label>-->
+    <!--</form>-->
+
+	<form method="POST">
+		<div class="col-md-5">
+			{% csrf_token %}
+            {{form|crispy}}
+			<input type="submit" class="btn btn-login" name="Search" value="Search">
+            <br>
+            <br>
+        </div>
+
+       <p style="color: red"> {{error}}</p>
+
+	</form>
+</div>
+<div class="row">
+
+    <h2 class="text-center"> {{header}}</h2>
+    {% for quote in data.Quotes %}
+
+    <table class="table" style="background-color: white">
+        <thead>
+        <th>Airlines</th>
+        <th>Origin Airport</th>
+        <th>Destination Airport</th>
+        <th>Start Date</th>
+        <th>Return Date</th>
+        <th>Price</th>
+        </thead>
+        <tbody>
+        <td>{{data.Carriers.0.Name}}</td>
+        <td>{{ origin }} - {{data.Places.1.Name}}</td>
+        <td> {{destination}} - {{data.Places.0.Name}}</td>
+        <td>{{quote.OutboundLeg.DepartureDate}}</td>
+        <td>{{quote.InboundLeg.DepartureDate }}</td>
+        <td>Price: {{quote.MinPrice}}{{data.Currencies.0.Symbol}}</td>
+        </tbody>
+    </table>
+    <!--{{ origin }} {{destination}}-->
+		<!--<div>{{data.Carriers.0.Name}}</div>-->
+		<!--<div>{{quote.OutboundLeg.OriginId}} -> {{quote.OutboundLeg.DestinationId}}</div>-->
+		<!--<div>{{quote.OutboundLeg.DepartureDate}}</div>-->
+		<!--<div>Price: {{quote.MinPrice}}{{data.Currencies.0.Symbol}}</div>-->
+	{% endfor %}
+
+	<!--{{data}}-->
+</div>
+</div>
+{% endblock %}

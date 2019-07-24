@@ -22,3 +22,20 @@ class UserEditForm(forms.ModelForm):
         model = User
         fields = ('first_name', 'last_name', 'email')
 
+
+class CityForm(forms.Form):
+    city = forms.CharField(required=True,label='City',)
+
+codes = (
+    ('',''),
+    ('SFO', 'SFO-San Francisco'),
+    ('ORD', 'ORD-Chicago'),
+    ('MIA', 'MIA-Miami'),
+    ('DEN','DEN-Denver'),
+)
+class FlightsForm(forms.Form):
+    originplace = forms.ChoiceField(label='Origin', required=True, choices=codes,)
+    destinationplace = forms.ChoiceField(label='Destination',choices=codes, required=True,)
+    outboundpartialdate = forms.DateField(label='Outbound Date', widget=forms.SelectDateWidget(empty_label="Nothing"), required=True)
+    inboundpartialdate = forms.DateField(label='Inbound Date', widget=forms.SelectDateWidget(empty_label="Nothing"), required=True )
+

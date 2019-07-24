@@ -1,0 +1,70 @@
+{% extends 'mytrip/base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<br>
+<br>
+
+
+        <div class="container">
+
+            <h2 class="text-center">Know Current weather in a city?</h2>
+<br>
+
+              <form method="POST">
+                  {% csrf_token %}
+                  <div class="row">
+                      <div class="col-md-5">
+                          {{form|crispy}}
+                          <!--<input type="text" name="city" class="w3-input" style="padding-left: 20px" placeholder="Enter city name ex: Omaha" required>-->
+                      </div>
+
+                      <div class="col-md-3">
+                      <br>
+                          <button type="submit" class="btn btn-login">
+                                    Add City
+                                </button>
+                      </div>
+                  </div>
+                    </form>
+            <h4 style="color: red">{{error}}</h4>
+{{forecast}}
+                   {% for city_weather in weather_data %}
+
+  <div class="w3-card-4" style="width:60%; background-color: white">
+    <header class="w3-container w3-light-grey" style="align-content: center; background-color: aliceblue">
+      <h2 class="text-center">{{city_weather.city}}</h2>
+    </header>
+    <div class="w3-container row">
+        <div class="col-md-1"></div>
+        <div class="col-md-5" style="background-color: white">
+      <h4>Temperature: {{city_weather.temperature}}° C </h4>
+      <hr>
+      <img src="http://openweathermap.org/img/w/{{city_weather.icon}}.png" alt="Image" class="w3-left w3-circle w3-margin-right" style="width:60px">
+
+
+        <h5>{{city_weather.description}}</h5>
+        </div>
+      <div class="col-md-5" style="background-color: white">
+        <h5>minimum temperature:{{city_weather.min_temp}}° C</h5>
+        <h5>maximum temperature:{{city_weather.max_temp}}° C</h5>
+        <h5>Wind Speed:{{city_weather.wind}}</h5>
+        <h5>Visibility:{{city_weather.visibility}}</h5>
+        <h5>Humidity:{{city_weather.humidity}}</h5>
+      </div>
+  </div>
+             <br>
+            <br>
+</div>
+
+<br>
+            <br>
+                    {% endfor %}
+
+{{forecast}}
+
+
+        </div>
+
+{% endblock %}

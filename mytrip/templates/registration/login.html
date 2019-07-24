@@ -9,6 +9,8 @@
 {% load crispy_forms_tags %}
 {% load socialaccount %}
 {% block content %}
+
+
     {% if form.errors %}
         <br xmlns:align-content="http://www.w3.org/1999/xhtml" xmlns:align-content="http://www.w3.org/1999/xhtml"/>
     <!--<p>Your username and password didn't match. Please try again.</p>-->
@@ -23,23 +25,23 @@
                         {% csrf_token %}
                         {{form|crispy}}
                     </div>
-                    <div class="form-check">
-                        <br class="row">
+                    <div class="form-check"><div class="row">
+                                    <button type="submit" class="btn btn-login" ><font color="black" >Login</font></button><br><br>
+                            <div class="col-md-8 mx-auto social-container my-2 order-md-1">
 
-                        <button type="submit" class="btn btn-login" ><font color="black" >Login</font></button>
-<span></span>
-                        <button type="submit" class="btn btn-login">
-                        <a href="{% provider_login_url 'google' %}"><font color="black" > Log In with Gmail</font></a>
-                        </button>
-                        <br></br>
-                            <button type="submit" class="btn btn-login">
-                                <a href="{% url 'social:begin' 'facebook' %}"><font color="black"><b>Login with Facebook</b></font></a>
-                         </button>
-                        <br></br>
+                                <button class="btn btn-danger  mb-2">
+                        <a href="{% provider_login_url 'google' %}" target="_blank"><font color="black" > Log In with Gmail</font></a>
+                        </button><br><br>
+                                 <button class="btn btn-danger  mb-2">
+                               <a href="{% url 'social:begin' 'facebook' %}" target="_blank"><font color="black"><b>Log In With Facebook </b></font></a>
+                                 </button> <br><br>
+                                 <button class="btn btn-danger  mb-2">
+                             <a href="{% url 'social:begin' 'instagram' %}" target="_blank"><font color="black"><b>Login In With Instagram </b></font></a>
+                                 </button><br><br>
+                        </div></div>
                         <div class="row">
                         <button class="btn btn-login"><a style="color:#0C0B4D " href="{% url "mytrip:password_reset" %}">Forgotten your password?</a></button>
                         </div>
-                        <br>
                         <p style="color: #0C0B4D"> <b> If you don't have an account </b><a href="{% url "mytrip:register" %}"><button type="submit" class="btn btn-login"><font color="black"> Sign Up Here</font></button></a></p>
 
         <!--<p><input type="submit" value="Login"/></p>-->

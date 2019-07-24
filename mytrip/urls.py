@@ -3,7 +3,8 @@ from django.contrib.auth.views import logout, password_change as pwd_change, pas
 from django.contrib.auth import views as auth_views
 from django.urls import path
 from . import views
-from django.contrib.auth.views import password_change as pwd_change, password_change_done as pwd_change_done, password_reset as reset, password_reset_done as reset_done, password_reset_confirm as reset_confirm, password_reset_complete as reset_complete
+from django.views.generic import TemplateView
+from mytrip.views import weather,flights
 
 
 
@@ -15,6 +16,8 @@ urlpatterns = [
     # url(r'^$', views.home, name='home'),
     url(r'^home/$', views.home, name='home'),
     url(r'^register/$', views.register, name='register'),
+    path('flights/', flights.as_view(), name='flights'),
+    path('weather/', weather.as_view(), name='weather'),
     url('^password-change/done/$', pwd_change_done, name='password_change_done'),
     url('^password-change/$', pwd_change, {'post_change_redirect': '/password-change/done/'}, name='password_change'),
     url(r'^password-reset/complete/$', reset_complete, name='password_reset_complete'),
