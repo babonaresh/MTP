@@ -30,4 +30,5 @@ urlpatterns = [
         name='password_reset'),
     url(r'^location/$', views.location, name='location'),
 
+
     ]

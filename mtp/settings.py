@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google', # added for google auth
     'crispy_forms',
     'social_django',
+    'worldmap'
+
 ]
 
 MIDDLEWARE = [
