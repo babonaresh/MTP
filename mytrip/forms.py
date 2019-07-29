@@ -52,11 +52,11 @@ codes = (
     ('IAH','George Bush Intercontinental Airport-Houston'),
     ('PHX','Phoenix Sky Harbor International Airport-Phoenix'),
     ('MCO','Orlando International Airport-Orlando'),
-    ('EWR','Newark Liberty International Airport-'),
-    ('CLT','Charlotte Douglas International Airport-'),
-    ('SEA','Seattle–Tacoma International Airport-'),
-    ('LAS','McCarran International Airport-'),
-    ('JFK','John F. Kennedy International Airport-'),
+    ('EWR','Newark Liberty International Airport-Newark'),
+    ('CLT','Charlotte Douglas International Airport-Charlotte'),
+    ('SEA','Seattle–Tacoma International Airport-Seattle'),
+    ('LAS','McCarran International Airport-Las Vegas'),
+    ('JFK','John F. Kennedy International Airport- New York'),
 )
 class FlightsForm(forms.Form):
     originplace = forms.ChoiceField(label='Origin', required=True, choices=codes,)
