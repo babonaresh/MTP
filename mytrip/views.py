@@ -136,7 +136,7 @@ class flights(TemplateView):
         if form.is_valid():
             origin = form.cleaned_data['originplace']
             destination = form.cleaned_data['destinationplace']
-            url = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/'+ form.cleaned_data['originplace'] + '/' + form.cleaned_data['destinationplace'] + '/' + (form.cleaned_data['outboundpartialdate']).strftime("%Y-%m-%d")+ '/' + (form.cleaned_data['inboundpartialdate']).strftime("%Y-%m-%d")
+            url = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/'+ form.cleaned_data['originplace'] + '/' + form.cleaned_data['destinationplace'] + '/' + (form.cleaned_data['outboundpartialdate']).strftime("%Y-%m")+ '/' + (form.cleaned_data['inboundpartialdate']).strftime("%Y-%m")
             headers = {'X-RapidAPI-Key': settings.RAPIDAPI_API_KEY}
             api_response = requests.get(url, headers=headers)
             flights_json = api_response.json()
@@ -150,9 +150,9 @@ class flights(TemplateView):
                     airline_data={
                         'id':quote['QuoteId'],
                             'origin': origin,
-                                'airportorigin': flights_json['Places'][1]['Name'],
+                                'airportorigin': flights_json['Places'][0]['Name'],
                                 'destination': destination,
-                                'airportdest': flights_json['Places'][0]['Name'],
+                                'airportdest': flights_json['Places'][1]['Name'],
                             'startdate': quote['OutboundLeg']['DepartureDate'],
                                 'returndate': quote['InboundLeg']['DepartureDate'],
                                 'price': quote['MinPrice'],
