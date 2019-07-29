@@ -26,32 +26,51 @@
 <div class="row">
 
     <h2 class="text-center"> {{header}}</h2>
-    {% for quote in data.Quotes %}
 
     <table class="table" style="background-color: white">
         <thead>
-        <th>Airlines</th>
+        <th>Out Airlines</th>
         <th>Origin Airport</th>
+        <th>In Airlines</th>
         <th>Destination Airport</th>
         <th>Start Date</th>
         <th>Return Date</th>
         <th>Price</th>
         </thead>
+        {% for airline_data in flights_data %}
         <tbody>
-        <td>{{data.Carriers.0.Name}}</td>
-        <td>{{ origin }} - {{data.Places.1.Name}}</td>
-        <td> {{destination}} - {{data.Places.0.Name}}</td>
-        <td>{{quote.OutboundLeg.DepartureDate}}</td>
-        <td>{{quote.InboundLeg.DepartureDate }}</td>
-        <td>Price: {{quote.MinPrice}}{{data.Currencies.0.Symbol}}</td>
+        <td>
+            {% for carriers in airline_data.carrier%}
+        {% for outcarriers in airline_data.outcarrier%}
+            {% if carriers.CarrierId == outcarriers %}
+                {{carriers.Name}}
+
+            {%endif%}
+            {%endfor%}
+        {%endfor%}
+        </td>
+
+
+        <td>{{ airline_data.origin }} - {{airline_data.airportorigin}}</td>
+        <td>
+            {% for carriers in airline_data.carrier%}
+        {% for incarriers in airline_data.incarrier%}
+            {% if carriers.CarrierId == incarriers %}
+                {{carriers.Name}}
+
+            {%endif%}
+            {%endfor%}
+        {%endfor%}
+        </td>
+
+        <td> {{airline_data.destination}} - {{airline_data.airportdest}}</td>
+        <td>{{airline_data.startdate}}</td>
+        <td>{{airline_data.returndate }}</td>
+        <td>Price: {{airline_data.price}}{{airline_data.symbol}}</td>
         </tbody>
+        {% endfor %}
     </table>
-    <!--{{ origin }} {{destination}}-->
-		<!--<div>{{data.Carriers.0.Name}}</div>-->
-		<!--<div>{{quote.OutboundLeg.OriginId}} -> {{quote.OutboundLeg.DestinationId}}</div>-->
-		<!--<div>{{quote.OutboundLeg.DepartureDate}}</div>-->
-		<!--<div>Price: {{quote.MinPrice}}{{data.Currencies.0.Symbol}}</div>-->
-	{% endfor %}
+
 
 	<!--{{data}}-->
 </div>

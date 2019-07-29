@@ -131,7 +131,6 @@ class flights(TemplateView):
                 return render(request, self.template_name, {'form': form})
 
     def post(self, request):
-        data = {}
         # if request.method == 'POST':
         form = FlightsForm(request.POST)
         if form.is_valid():
@@ -140,25 +139,48 @@ class flights(TemplateView):
             url = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/'+ form.cleaned_data['originplace'] + '/' + form.cleaned_data['destinationplace'] + '/' + (form.cleaned_data['outboundpartialdate']).strftime("%Y-%m-%d")+ '/' + (form.cleaned_data['inboundpartialdate']).strftime("%Y-%m-%d")
             headers = {'X-RapidAPI-Key': settings.RAPIDAPI_API_KEY}
             api_response = requests.get(url, headers=headers)
+            flights_json = api_response.json()
+
             if api_response.status_code == 200:
                 form = FlightsForm()
-                header= "Below are the Details for you Trip"
+                flights_data = []
+                for quote in flights_json['Quotes']:
+                    # if quote['InboundLeg']['CarrierIds']== or  quote['OutboundLeg']['CarrierIds'] ==
+
+                    airline_data={
+                        'id':quote['QuoteId'],
+                            'origin': origin,
+                                'airportorigin': flights_json['Places'][1]['Name'],
+                                'destination': destination,
+                                'airportdest': flights_json['Places'][0]['Name'],
+                            'startdate': quote['OutboundLeg']['DepartureDate'],
+                                'returndate': quote['InboundLeg']['DepartureDate'],
+                                'price': quote['MinPrice'],
+                                'incarrier': quote['InboundLeg']['CarrierIds'],
+                                'outcarrier': quote['OutboundLeg']['CarrierIds'],
+                                 'carrier':flights_json['Carriers'],
+                                'symbol': flights_json['Currencies'][0]['Symbol'],
+                            }
+
+                    # print(airline_data['id'])
+                    flights_data.append(airline_data)
+                    # print(flights_data)
+                header = "Below are the Details for you Trip"
                 context = {
-                    'origin': origin,
-                    'destination': destination,
-                    'data': api_response.json(),
+                    'flights_data': flights_data,
                     'form': form,
                     'header': header,
-                }
-                return render(request, self.template_name, context)
-            else:
-                error = 'Please Check the Details you entered'
-                form = FlightsForm()
-                context = {
+                    }
+                # print(context)
+                return render(request, self.template_name, context,)
+        else:
+            error = 'Please Check the Details you entered'
+            form = FlightsForm()
+            context = {
                     'error' : error,
                     'form' : form,
-                }
-                return render(request, self.template_name,context)
+            }
+            return render(request, self.template_name,context)
 
 def location(request):
    return render(request, 'mytrip/location.html',
