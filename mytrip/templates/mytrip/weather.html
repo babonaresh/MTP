@@ -57,10 +57,14 @@
              <br>
             <br>
 </div>
+             {% endfor %}
+            {% for lists in forecast_data.list %}
+            <h4>Temperature: {{lists.temperature}}° C </h4>
 
+ {% endfor %}
 <br>
             <br>
-                    {% endfor %}
+
 
 {{forecast}}
 

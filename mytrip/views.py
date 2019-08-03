@@ -30,9 +30,6 @@ def register(request):
         user_form = UserRegistrationForm()
     return render(request, 'mytrip/register.html', {'user_form': user_form})
 
-
-
-
 class weather(TemplateView):
     template_name = 'mytrip/weather.html'
 
@@ -53,8 +50,11 @@ class weather(TemplateView):
             forecast = requests.get(url1).json()
             url= main_api + city + api_key
             json_data= requests.get(url).json()
-            if json_data['cod']==200:
+            if (json_data['cod']==200) & (forecast['cod']== "200"):
+                # print(forecast)
+                # print(json_data)
                 weather_data = []
+                forecast_data=[]
                 city_weather = {
                     'city': city,
                     'temperature': json_data['main']['temp'],
@@ -66,43 +66,16 @@ class weather(TemplateView):
                     'wind': json_data['wind']['speed'],
                     'visibility': json_data['visibility'],
                     }
+                forecast_weather= {
+                    'list': forecast['list'],
+                }
+                # print(forecast_weather)
                 weather_data.append(city_weather)
+                forecast_data.append(forecast_weather)
                 context = {
                     'weather_data': weather_data,
-                     'form': form,
-                }
-                return render(request, self.template_name, context)
-            elif forecast['cod']==200:
-                context={
-                    'forecast':requests.get(url1).json(),
-                    'form':form,
-                }
-                return render(request, self.template_name, context)
-            else:
-                error='Please Check the Name of the City'
-                form= CityForm()
-                context={
-                    'error':error,
-                    'form' : form,
-                }
-                return render(request, self.template_name, context)
-
-def forecast(self, request):
-        form = CityForm(request.POST)
-        if form.is_valid():
-            city = form.cleaned_data['city']
-            form = CityForm()
-            # main_api = 'http://api.openweathermap.org/data/2.5/weather?q='
-            # api_key = '&units=metric&appid=907d8c401b542c8e7ede79a3ddea8f1a'
-            main_api = 'http://api.openweathermap.org/data/2.5/forecast?q='
-            api_key = '&units=metric&appid=907d8c401b542c8e7ede79a3ddea8f1a'
-            url= main_api + city + api_key
-            json_data= requests.get(url).json()
-            if json_data['cod']==200:
-                form = CityForm()
-                context = {
-                    'data': json_data,
                     'form': form,
+                    'forecast_data':forecast_data,
                 }
                 return render(request, self.template_name, context)
             else:
@@ -113,7 +86,6 @@ def forecast(self, request):
                     'form' : form,
                 }
                 return render(request, self.template_name, context)
-
 
 
 class flights(TemplateView):
@@ -121,44 +93,111 @@ class flights(TemplateView):
 
 
     def get(self, request):
-        # if request.method == 'POST':
-        #     radio = form.cleaned_data['one/two']
-        #     if radio=='one':
-        #         form = FlightsFormOne()
-        #         return render(request, self.template_name, {'form': form})
-        #     else:
                 form = FlightsForm()
                 return render(request, self.template_name, {'form': form})
 
+
+
     def post(self, request):
-        data = {}
         # if request.method == 'POST':
         form = FlightsForm(request.POST)
         if form.is_valid():
-            origin = form.cleaned_data['originplace']
-            destination = form.cleaned_data['destinationplace']
-            url = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/'+ form.cleaned_data['originplace'] + '/' + form.cleaned_data['destinationplace'] + '/' + (form.cleaned_data['outboundpartialdate']).strftime("%Y-%m-%d")+ '/' + (form.cleaned_data['inboundpartialdate']).strftime("%Y-%m-%d")
+            input1 = form.cleaned_data['originplace']
+            origin,orgcity = input1.split("-")
+            print(origin)
+            print(orgcity)
+            input2 = form.cleaned_data['destinationplace']
+            destination,destcity = input2.split("-")
+            print(destination)
+            print(destcity)
+            url = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/'+ origin + '/' + destination+ '/' + (form.cleaned_data['outboundpartialdate']).strftime("%Y-%m")+ '/' + (form.cleaned_data['inboundpartialdate']).strftime("%Y-%m")
             headers = {'X-RapidAPI-Key': settings.RAPIDAPI_API_KEY}
             api_response = requests.get(url, headers=headers)
-            if api_response.status_code == 200:
+            flights_json = api_response.json()
+            main_api = 'http://api.openweathermap.org/data/2.5/weather?q='
+            api_key = '&units=metric&appid=907d8c401b542c8e7ede79a3ddea8f1a'
+            map  = 'https://maps.googleapis.com/maps/api/directions/json?origin="'+orgcity+'"&destination="'+destcity+'"&key=AIzaSyDohjPYxETfcjKzjHoiqYGenuirmd0jWg0'
+            url1 = main_api + orgcity + api_key
+            url2 = main_api + destcity + api_key
+            org_data = requests.get(url1).json()
+            dest_data = requests.get(url2).json()
+            map_json = []
+            map_data = requests.get(map).json()
+            map_values = {
+                "start": map_data['routes'][0]['legs'][0]['start_address'],
+                "end": map_data['routes'][0]['legs'][0]['end_address'],
+                "distance": map_data['routes'][0]['legs'][0]['distance']['text'],
+                "duration": map_data['routes'][0]['legs'][0]['duration']['text'],
+            }
+            map_json.append(map_values)
+            print(map_values)
+            if (api_response.status_code == 200) & (org_data['cod']==200) & (dest_data['cod']== 200):
                 form = FlightsForm()
-                header= "Below are the Details for you Trip"
+
+                flights_data = []
+                origin_weather = []
+                destination_weather = []
+                origin_city_weather = {
+                    'city': orgcity,
+                    'temperature': org_data['main']['temp'],
+                    'description': org_data['weather'][0]['description'],
+                    'icon': org_data['weather'][0]['icon'],
+
+                }
+                destination_city_weather = {
+                    'city': destcity,
+                    'temperature': dest_data['main']['temp'],
+                    'description': dest_data['weather'][0]['description'],
+                    'icon': dest_data['weather'][0]['icon'],
+                }
+
+                # print(map_values)
+                origin_weather.append(origin_city_weather)
+                destination_weather.append(destination_city_weather)
+                print(origin_weather)
+                print(destination_weather)
+                for quote in flights_json['Quotes']:
+                    # if quote['InboundLeg']['CarrierIds']== or  quote['OutboundLeg']['CarrierIds'] ==
+                    airline_data={
+                        'id':quote['QuoteId'],
+                            'origin': origin,
+                                'airportorigin': flights_json['Places'][1]['Name'],
+                                'destination': destination,
+                                'airportdest': flights_json['Places'][0]['Name'],
+                                'startdate': quote['OutboundLeg']['DepartureDate'],
+                                'returndate': quote['InboundLeg']['DepartureDate'],
+                                'price': quote['MinPrice'],
+                                'incarrier': quote['InboundLeg']['CarrierIds'],
+                                'outcarrier': quote['OutboundLeg']['CarrierIds'],
+                                 'carrier':flights_json['Carriers'],
+                                'symbol': flights_json['Currencies'][0]['Symbol'],
+                            }
+                    flights_data.append(airline_data)
+
+                    # print(flights_data)
+
+                header = "Below are the Details for you Trip"
                 context = {
-                    'origin': origin,
-                    'destination': destination,
-                    'data': api_response.json(),
+                    'flights_data': flights_data,
+                    'origin_weather': origin_weather,
+                    'destination_weather': destination_weather,
+                    'map_json': map_json,
                     'form': form,
                     'header': header,
-                }
-                return render(request, self.template_name, context)
-            else:
-                error = 'Please Check the Details you entered'
-                form = FlightsForm()
-                context = {
+                    'orgin': orgcity,
+                    'destination': destcity,
+                    }
+                # print(context)
+                return render(request, self.template_name, context,)
+        else:
+            error = 'Please Check the Details you entered'
+            form = FlightsForm()
+            context = {
                     'error' : error,
                     'form' : form,
-                }
-                return render(request, self.template_name,context)
+            }
+            return render(request, self.template_name,context)
+
 
 def location(request):
    return render(request, 'mytrip/location.html',

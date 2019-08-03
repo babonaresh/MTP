@@ -2,58 +2,282 @@
 {% load staticfiles %}
 {% load crispy_forms_tags %}
 {% block content %}
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 50%;
+          width:50%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #description {
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+      }
 
+      #infowindow-content .title {
+        font-weight: bold;
+      }
+
+      #infowindow-content {
+        display: none;
+      }
+
+      #map #infowindow-content {
+        display: inline;
+      }
+
+        #floating-panel {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+      .pac-card {
+        margin: 10px 10px 0 0;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+         -moz-box-sizing: border-box;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        background-color: #fff;
+        font-family: Roboto;
+      }
+
+      #pac-container {
+        padding-bottom: 12px;
+        margin-right: 12px;
+      }
+
+      .pac-controls {
+        display: inline-block;
+        padding: 5px 11px;
+      }
+
+      .pac-controls label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+
+      #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 400px;
+      }
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+      }
+
+      #title {
+        color: #fff;
+        background-color: #4d90fe;
+        font-size: 25px;
+        font-weight: 500;
+        padding: 6px 12px;
+      }
+      #target {
+        width: 345px;
+      }
+    </style>
 <div class="container">
     <div class="row">
         <!--<form action="" method="post">-->
     <!--<label for="l_box1"><input type="radio" name="display_type" value="one" id="l_box1">One Way</label>-->
     <!--<label for="d_box2"><input type="radio" name="display_type" value="two" id="d_box2">Two Way</label>-->
     <!--</form>-->
-
+<div class="col-md-5">
 	<form method="POST">
-		<div class="col-md-5">
+
 			{% csrf_token %}
             {{form|crispy}}
 			<input type="submit" class="btn btn-login" name="Search" value="Search">
             <br>
             <br>
-        </div>
+
 
        <p style="color: red"> {{error}}</p>
 
 	</form>
+      </div>
+        <div class="col-md-6">
+                               {% for origin_city_weather in origin_weather %}
+
+  <div class="w3-card-4" style="width:60%; background-color: white">
+    <header class="w3-container w3-light-grey" style="align-content: center; background-color: aliceblue">
+      <h2 class="text-center">{{origin_city_weather.city}}</h2>
+    </header>
+    <div class="w3-container row">
+        <div class="col-md-1"></div>
+        <div class="col-md-9" style="background-color: white">
+      <h4>Temperature: {{origin_city_weather.temperature}}° C </h4>
+      <hr>
+      <img src="http://openweathermap.org/img/w/{{origin_city_weather.icon}}.png" alt="Image" class="w3-left w3-circle w3-margin-right" style="width:60px">
+
+
+        <h5>Description: {{origin_city_weather.description}}</h5>
+        </div>
+  </div>
+             <br>
+            <br>
+</div>
+             {% endfor %}
+            {% for destination_city_weather in destination_weather %}
+
+  <div class="w3-card-4" style="width:60%; background-color: white">
+    <header class="w3-container w3-light-grey" style="align-content: center; background-color: aliceblue">
+      <h2 class="text-center">{{destination_city_weather.city}}</h2>
+    </header>
+    <div class="w3-container row">
+        <div class="col-md-1"></div>
+        <div class="col-md-9" style="background-color: white">
+      <h4>Temperature: {{destination_city_weather.temperature}}° C </h4>
+      <hr>
+      <img src="http://openweathermap.org/img/w/{{destination_city_weather.icon}}.png" alt="Image" class="w3-left w3-circle w3-margin-right" style="width:60px">
+
+
+        <h5>Description: {{destination_city_weather.description}}</h5>
+        </div>
+  </div>
+             <br>
+            <br>
+</div>
+             {% endfor %}
+        </div>
 </div>
 <div class="row">
 
     <h2 class="text-center"> {{header}}</h2>
-    {% for quote in data.Quotes %}
+
 
     <table class="table" style="background-color: white">
         <thead>
-        <th>Airlines</th>
+        <th>Out Airlines</th>
         <th>Origin Airport</th>
+        <th>In Airlines</th>
         <th>Destination Airport</th>
         <th>Start Date</th>
         <th>Return Date</th>
         <th>Price</th>
         </thead>
+        {% for airline_data in flights_data %}
         <tbody>
-        <td>{{data.Carriers.0.Name}}</td>
-        <td>{{ origin }} - {{data.Places.1.Name}}</td>
-        <td> {{destination}} - {{data.Places.0.Name}}</td>
-        <td>{{quote.OutboundLeg.DepartureDate}}</td>
-        <td>{{quote.InboundLeg.DepartureDate }}</td>
-        <td>Price: {{quote.MinPrice}}{{data.Currencies.0.Symbol}}</td>
-        </tbody>
-    </table>
-    <!--{{ origin }} {{destination}}-->
-		<!--<div>{{data.Carriers.0.Name}}</div>-->
-		<!--<div>{{quote.OutboundLeg.OriginId}} -> {{quote.OutboundLeg.DestinationId}}</div>-->
-		<!--<div>{{quote.OutboundLeg.DepartureDate}}</div>-->
-		<!--<div>Price: {{quote.MinPrice}}{{data.Currencies.0.Symbol}}</div>-->
-	{% endfor %}
+        <td>
+            {% for carriers in airline_data.carrier%}
+        {% for outcarriers in airline_data.outcarrier%}
+            {% if carriers.CarrierId == outcarriers %}
+                {{carriers.Name}}
 
-	<!--{{data}}-->
+            {%endif%}
+            {%endfor%}
+        {%endfor%}
+        </td>
+
+
+        <td>{{ airline_data.origin }} - {{airline_data.airportorigin}}</td>
+        <td>
+            {% for carriers in airline_data.carrier%}
+        {% for incarriers in airline_data.incarrier%}
+            {% if carriers.CarrierId == incarriers %}
+                {{carriers.Name}}
+
+            {%endif%}
+            {%endfor%}
+        {%endfor%}
+        </td>
+
+        <td> {{airline_data.destination}} - {{airline_data.airportdest}}</td>
+        <td>{{airline_data.startdate}}</td>
+        <td>{{airline_data.returndate }}</td>
+        <td>{{airline_data.symbol}}{{airline_data.price}}</td>
+        </tbody>
+        {% endfor %}
+    </table>
+
 </div>
 </div>
+ {% for map_values in map_json %}
+    <div style="display: none">
+    <b>Start: </b>
+    <input id="start" type="text" value="{{map_values.start}}">
+    <b>End: </b>
+    <input id="end" type="text" value="{{map_values.end}}">
+    </div>
+<div class="row">
+    <div id="map" class="col-md-6"></div>
+    <div class="col-md-6">
+
+  <div class="w3-card-4" style="width:90%; background-color: white">
+    <header class="w3-container w3-light-grey" style="align-content: center; background-color: aliceblue">
+      <h2 class="text-center">{{map_values.start}} to {{map_values.end}}</h2>
+    </header>
+    <div class="w3-container row">
+        <div class="col-md-1"></div>
+        <div class="col-md-9" style="background-color: white">
+      <h4>Duration: {{map_values.duration}}</h4>
+        <h4>Distance: {{map_values.distance}}</h4>
+        </div>
+  </div>
+             <br>
+            <br>
+</div>
+             {% endfor %}</div>
+</div>
+
+
+    <script>
+      function initMap(directionsService, directionsDisplay) {
+        var directionsService = new google.maps.DirectionsService;
+        var directionsDisplay = new google.maps.DirectionsRenderer;
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 7,
+          center: {lat: 41.85, lng: -87.65}
+        });
+        directionsDisplay.setMap(map);
+
+        // var onChangeHandler = function() {
+        //   calculateAndDisplayRoute(directionsService, directionsDisplay);
+        // };
+        // document.getElementById('start').addEventListener('change', onChangeHandler);
+        // document.getElementById('end').addEventListener('change', onChangeHandler);
+
+
+      // function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+        directionsService.route({
+          origin: document.getElementById('start').value,
+          destination: document.getElementById('end').value,
+            // console:log(origin),
+            // console:log(destination),
+          travelMode: 'DRIVING'
+        }, function(response, status) {
+            if (status === 'OK') {
+                directionsDisplay.setDirections(response);
+            } else {
+                window.alert('Directions request failed due to ' + status);
+            }
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDohjPYxETfcjKzjHoiqYGenuirmd0jWg0&callback=initMap">
+    </script>
 {% endblock %}
