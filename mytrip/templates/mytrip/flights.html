@@ -98,6 +98,56 @@
       #target {
         width: 345px;
       }
+     #table-wrapper {
+  position:relative;
+    }
+    #table-scroll {
+      height:352px;
+      overflow:auto;
+      margin-top:20px;
+    }
+    #table-wrapper table {
+      width:100%;
+
+    }
+    #table-wrapper table * {
+      background:white;
+      color:black;
+    }
+    #table-wrapper table thead th .text {
+      position:absolute;
+      top:-20px;
+      z-index:2;
+      height:20px;
+      width:35%;
+      border:1px solid red;
+    }
+
+
+  #table-wrapperF {
+  position:relative;
+    }
+    #table-scrollF {
+      height:350px;
+      overflow:auto;
+      margin-top:20px;
+    }
+    #table-wrapperF table {
+      width:100%;
+
+    }
+    #table-wrapperF table * {
+      background:white;
+      color:black;
+    }
+    #table-wrapperF table thead th .text {
+      position:absolute;
+      top:-20px;
+      z-index:2;
+      height:60px;
+      width:35%;
+      border:1px solid red;
+    }
     </style>
 <div class="container">
     <div class="row">
@@ -162,14 +212,14 @@
             <br>
 </div>
              {% endfor %}
+
         </div>
 </div>
 <div class="row">
-
     <h2 class="text-center"> {{header}}</h2>
-
-
-    <table class="table" style="background-color: white">
+<div id="table-wrapperF">
+          <div id="table-scrollF">
+    <table class="table" style="background-color: white"  border="1">
         <thead>
         <th>Out Airlines</th>
         <th>Origin Airport</th>
@@ -212,9 +262,40 @@
         </tbody>
         {% endfor %}
     </table>
+          </div>
+</div>
+
+
+    <h2 class="text-center"><strong>Resturant recommendations in your destination city</strong></h2>
+    <div id="table-wrapper">
+          <div id="table-scroll">
+                 <table class="table" style="background-color: white" border="1">
+                  <thead>
+                  <th>Name</th>
+                  <th>Timings</th>
+                  <th>Avg. Price for 2</th>
+                  <th>Location Address</th>
+                  <th>Review Ratings</th>
+                  </thead>
+                {% for eachResturant in zomato.restaurants %}
+                  <tbody>
+                  <td>{{eachResturant.restaurant.name}}</td>
+                  <td>{{eachResturant.restaurant.timings}}</td>
+                  <td>{{eachResturant.restaurant.average_cost_for_two}}</td>
+                  <td>{{eachResturant.restaurant.location.address}}</td>
+                  <td>{{eachResturant.restaurant.user_rating.aggregate_rating}}</td>
+                  </tbody>
+                {% endfor %}
+              </table>
+          </div>
+    </div>
+    <br>
+    <br>
+
 
 </div>
 </div>
+<div class="container">
  {% for map_values in map_json %}
     <div style="display: none">
     <b>Start: </b>
@@ -242,7 +323,7 @@
 </div>
              {% endfor %}</div>
 </div>
-
+</div>
 
     <script>
       function initMap(directionsService, directionsDisplay) {
