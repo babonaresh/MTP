@@ -150,7 +150,10 @@ class flights(TemplateView):
                     'description': dest_data['weather'][0]['description'],
                     'icon': dest_data['weather'][0]['icon'],
                 }
-
+                # Resturants Integration Starts
+                zomato_api = 'https://developers.zomato.com/api/v2.1/search?&entity_id=' + destcity + "&entity_type=city&count=20&sort=rating&order=desc"
+                zomato_header = {"User-agent": "curl/7.43.0", "Accept": "application/json","user_key": "50bf80e7cc40a8869d99583c024cb58a"}
+                # Resturants Integration Ends
                 # print(map_values)
                 origin_weather.append(origin_city_weather)
                 destination_weather.append(destination_city_weather)
@@ -186,9 +189,10 @@ class flights(TemplateView):
                     'header': header,
                     'orgin': orgcity,
                     'destination': destcity,
+                    'zomato': requests.get(zomato_api, headers=zomato_header).json()
                     }
                 # print(context)
-                return render(request, self.template_name, context,)
+                return render(request, self.template_name, context)
         else:
             error = 'Please Check the Details you entered'
             form = FlightsForm()
@@ -216,15 +220,16 @@ class getzomato(TemplateView):
         if request.method == 'POST':
             if form.is_valid():
                 cuisines = form.cleaned_data['cuisines']
-                main_api = 'https://developers.zomato.com/api/v2.1/search?q=' +form.cleaned_data['searchkeyword'] + '&cuisines=' + form.cleaned_data['cuisines']
+                main_api = 'https://developers.zomato.com/api/v2.1/search?q=' +form.cleaned_data['searchkeyword'] + '&cuisines=' + form.cleaned_data['cuisines'] + "&entity_id=" + form.cleaned_data['citiesList'] + "&entity_type=city&count=20&sort=rating&order=desc"
                 header = {"User-agent": "curl/7.43.0", "Accept": "application/json",
                           "user_key": "50bf80e7cc40a8869d99583c024cb58a"}
-                response = requests.get(main_api, headers=header)
-                Zomato_data = []
                 form = ZomatoForm
-                context = {
-                    'cuisines':cuisines,
-                    'data': requests.get(main_api, headers=header).json(),
-                    'form': form,
-                    }
+                try:
+                    context = {
+                        'cuisines':cuisines,
+                        'data': requests.get(main_api, headers=header).json(),
+                        'form': form,
+                        }
+                except:
+                    pass
                 return render(request, self.template_name, context)
