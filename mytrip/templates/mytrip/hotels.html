@@ -1,0 +1,80 @@
+{% extends 'mytrip/base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<br>
+<br>
+
+
+        <div class="container">
+
+            <h2 class="text-center">Check Hotels?</h2>
+<br>
+
+              <form method="POST">
+                  {% csrf_token %}
+                  <div class="row">
+                      <div class="col-md-5">
+                          {{form|crispy}}
+                          <!--<input type="text" name="city" class="w3-input" style="padding-left: 20px" placeholder="Enter city name ex: Omaha" required>-->
+                      </div>
+
+                      <div class="col-md-3">
+                      <br>
+                          <button type="submit" class="btn btn-login">
+                                    Check
+                                </button>
+                      </div>
+                  </div>
+                    </form>
+            <h4 style="color: red">{{error}}</h4>
+<table class="table" style="background-color: white">
+    <thead>
+    <th>Start Date</th>
+    <th>End Date</th>
+    <th>Nights</th>
+    <th>Area</th>
+    <th>Anemities</th>
+    <th>Rating</th>
+    <th>total</th>
+    </thead>
+    {%for hotel_values in hotel_json%}
+    <tbody>
+
+    <td>{{start}}</td>
+    <td>{{end}}</td>
+    <td>{{hotel_values.nights}}</td>
+    <td>
+        {% for hotel_area in place_json%}
+
+            {% if hotel_values.id == hotel_area.code%}
+
+        {{hotel_area.name}}, {{hotel_area.city}},{{hotel_area.state}},{{hotel_area.country}}
+
+            {%endif%}
+        {%endfor%}
+        </td>
+    <td>
+        {% for code in hotel_values.hotel_codes%}
+        {% for hotel_amn in amenities%}
+
+            {% if code == hotel_amn.code %}
+
+        <li>{{hotel_amn.description}}</li>
+
+            {%endif%}
+            {%endfor%}
+        {%endfor%}
+        </td>
+    <td>{{hotel_values.rating}}</td>
+    <td>sub-total:{{hotel_values.sub_total}}<br>fee: {{hotel_values.fee}}<br>total:{{hotel_values.total}}
+    <a href="{{hotel_values.link}}" target="_blank">view deal</a></td>
+
+    </tbody>
+     {%endfor%}
+</table>
+
+        </div>
+
+{% endblock %}

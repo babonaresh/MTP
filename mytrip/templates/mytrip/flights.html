@@ -214,7 +214,6 @@
     </table>
 
 </div>
-</div>
  {% for map_values in map_json %}
     <div style="display: none">
     <b>Start: </b>
@@ -240,10 +239,67 @@
              <br>
             <br>
 </div>
-             {% endfor %}</div>
+         </div>
+
+    </div>
+             {% endfor %}
+
+
+
+
+<h2>Hotels at your destination</h2>
+
+<table class="table" style="background-color: white">
+    <thead>
+    <th>Start Date</th>
+    <th>End Date</th>
+    <th>Nights</th>
+    <th>Area</th>
+    <th>Anemities</th>
+    <th>Rating</th>
+    <th>total</th>
+    </thead>
+    {%for hotel_values in hotel_json%}
+    <tbody>
+
+    <td>{{start}}</td>
+    <td>{{end}}</td>
+    <td>{{hotel_values.nights}}</td>
+    <td>
+        {% for hotel_area in place_json%}
+
+            {% if hotel_values.id == hotel_area.code%}
+
+        {{hotel_area.name}}, {{hotel_area.city}},{{hotel_area.state}},{{hotel_area.country}}
+
+            {%endif%}
+        {%endfor%}
+        </td>
+    <td>
+        {% for code in hotel_values.hotel_codes%}
+        {% for hotel_amn in amenities%}
+
+            {% if code == hotel_amn.code %}
+
+        <li>{{hotel_amn.description}}</li>
+
+            {%endif%}
+            {%endfor%}
+        {%endfor%}
+        </td>
+    <td>{{hotel_values.rating}}</td>
+    <td>sub-total:{{hotel_values.sub_total}}<br>fee: {{hotel_values.fee}}<br>total:{{hotel_values.total}}
+    <a href="{{hotel_values.link}}" target="_blank">view deal</a></td>
+
+    </tbody>
+     {%endfor%}
+</table>
+    <h2>Nearby places in {{destination}}</h2>
+{% for place in places%}
+<li>{{place.Name}}</li>
+{%endfor%}
+
 </div>
-
-
     <script>
       function initMap(directionsService, directionsDisplay) {
         var directionsService = new google.maps.DirectionsService;
@@ -253,20 +309,9 @@
           center: {lat: 41.85, lng: -87.65}
         });
         directionsDisplay.setMap(map);
-
-        // var onChangeHandler = function() {
-        //   calculateAndDisplayRoute(directionsService, directionsDisplay);
-        // };
-        // document.getElementById('start').addEventListener('change', onChangeHandler);
-        // document.getElementById('end').addEventListener('change', onChangeHandler);
-
-
-      // function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         directionsService.route({
           origin: document.getElementById('start').value,
           destination: document.getElementById('end').value,
-            // console:log(origin),
-            // console:log(destination),
           travelMode: 'DRIVING'
         }, function(response, status) {
             if (status === 'OK') {
@@ -280,4 +325,6 @@
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDohjPYxETfcjKzjHoiqYGenuirmd0jWg0&callback=initMap">
     </script>
+
+
 {% endblock %}

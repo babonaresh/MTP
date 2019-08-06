@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.db import models
 
 class LoginForm(forms.Form):
     username = forms.CharField()
@@ -34,10 +35,10 @@ codes = (
     ('MIA-Miami', 'Miami International Airport-Miami'),
     ('DEN-Denver', 'Denver International Airport-Denver'),
     ('ATL-Atlanta', 'Hartsfield–Jackson Atlanta International Airport-Atlanta'),
-    ('LAX -Los Angeles', 'Los Angeles International Airport-Los Angeles'),
+    ('LAX-Los Angeles', 'Los Angeles International Airport-Los Angeles'),
     ('DFW-Dallas', 'Dallas/Fort Worth International Airport-Dallas'),
     ('MSP-Minneapolis', 'Minneapolis–Saint Paul International Airport-Minneapolis'),
-    ('DTW- Detroit', 'Detroit Metropolitan Airport- Detroit'),
+    ('DTW-Detroit', 'Detroit Metropolitan Airport- Detroit'),
     ('PHL-Philadelphia', 'Philadelphia International Airport-Philadelphia'),
     ('LGA-New York', 'LaGuardia Airport-New York'),
     ('BWI-Baltimore', 'Baltimore–Washington International Airport-Baltimore'),
@@ -45,7 +46,6 @@ codes = (
     ('DCA-Washington, D.C.', 'Ronald Reagan Washington National Airport-Washington, D.C.'),
     ('SAN-San Diego', 'San Diego International Airport-San Diego'),
     ('TPA-Tampa', 'Tampa International Airport-Tampa'),
-    ('HNL-Honolulu', 'Daniel K. Inouye International Airport-Honolulu'),
     ('PDX-Portland', '	Portland International Airport-Portland'),
     ('FLL-Fort Lauderdale', 'Fort Lauderdale–Hollywood International Airport-Fort Lauderdale'),
     ('BOS-Boston', 'Logan International Airport-Boston'),
@@ -56,16 +56,29 @@ codes = (
     ('CLT-Charlotte', 'Charlotte Douglas International Airport-Charlotte'),
     ('SEA-Seattle', 'Seattle–Tacoma International Airport-Seattle'),
     ('LAS-Las Vegas', 'McCarran International Airport-Las Vegas'),
-    ('JFK- New York', 'John F. Kennedy International Airport- New York'),
+    ('JFK-New York', 'John F. Kennedy International Airport- New York'),
 )
 class FlightsForm(forms.Form):
     originplace = forms.ChoiceField(label='Origin', required=True, choices=codes,)
     destinationplace = forms.ChoiceField(label='Destination',choices=codes, required=True,)
-    outboundpartialdate = forms.DateTimeField(label='Start Date',widget=forms.SelectDateWidget(empty_label="Nothing"), required=True)
-    inboundpartialdate = forms.DateTimeField(label='Return Date',widget=forms.SelectDateWidget(empty_label="Nothing") )
+    outboundpartialdate = forms.DateField(widget=forms.DateInput(
+                attrs={'type': 'date'}
+            ), required=True, label= 'Start Date')
+    inboundpartialdate = forms.DateField(widget=forms.DateInput(
+                attrs={'type': 'date'}
+            ),required=True, label= 'End Date')
+
 
 class ZomatoForm(forms.Form):
     searchkeyword = forms.CharField()
     cuisines = forms.CharField()
 
-# widget=forms.SelectDateWidget(empty_label="Nothing")
+class Hotels(forms.Form):
+    city = forms.CharField(required=True, label='Destination City')
+    indate = forms.DateField(widget=forms.DateInput(
+                attrs={'type': 'date'}
+            ), required=True, label= 'Start Date')
+    outdate = forms.DateField(widget=forms.DateInput(
+                attrs={'type': 'date'}
+            ),required=True, label= 'End Date')
+

@@ -58,15 +58,55 @@
             <br>
 </div>
              {% endfor %}
-            {% for lists in forecast_data.list %}
-            <h4>Temperature: {{lists.temperature}}° C </h4>
+            <!--{% for lists in forecast_data.list %}-->
+            <!--<h4>Temperature: {{lists.temperature}}° C </h4>-->
 
- {% endfor %}
+ <!--{% endfor %}-->
 <br>
+
+<table class="table" style="background-color: white">
+    {% for forecast_weather in forecast_data %}
+    {% if forecast_weather.time == '09:00:00' %}
+    <thead>
+    <th><h2>{{forecast_weather.date}}</h2></th>
+    </thead>
+    <tbody>
+    <td>
+        <div class="row">
+        <div class="col-md-4">
+        09:00 AM
             <br>
-
-
-{{forecast}}
+    <img src="http://openweathermap.org/img/w/{{forecast_weather.icon}}.png" alt="Image" class="w3-left w3-circle w3-margin-right" style="width:60px">
+        <br>
+            Temperature: {{forecast_weather.temp}}° C <br>
+        Description: {{forecast_weather.description}}
+        <br>
+            </div>
+            <div class="col-md-4">
+        {%elif forecast_weather.time == '15:00:00'%}
+        03:00 PM
+                <br>
+         <img src="http://openweathermap.org/img/w/{{forecast_weather.icon}}.png" alt="Image" class="w3-left w3-circle w3-margin-right" style="width:60px">
+        <br>
+                Temperature: {{forecast_weather.temp}}° C <br>
+        Description: {{forecast_weather.description}}
+        </div>
+        <div class="col-md-4">
+        {%elif forecast_weather.time == '21:00:00'%}
+        09:00 PM
+            <br>
+         <img src="http://openweathermap.org/img/w/{{forecast_weather.icon}}.png" alt="Image" class="w3-left w3-circle w3-margin-right" style="width:60px">
+        <br>
+            Temperature: {{forecast_weather.temp}}° C <br>
+        Description: {{forecast_weather.description}}
+        </div>
+        </div>
+    </td>
+    </tbody>
+    <br>
+    {%endif%}
+    {%endfor%}
+</table>
 
 
         </div>
