@@ -69,9 +69,41 @@ class FlightsForm(forms.Form):
             ),required=True, label= 'End Date')
 
 
+cities = (
+        ('', 'Select a City'),
+        ('306', 'San Francisco'),
+        ('292', 'Chicago'),
+        ('291', 'Miami'),
+        ('305', 'Denver'),
+        ('288', 'Atlanta'),
+        ('281', 'Los Angeles'),
+        ('276', 'Dallas'),
+        ('5570', 'Minneapolis'),
+        ('285', 'Detroit'),
+        ('287', 'Philadelphia'),
+        ('280', 'New York'),
+        ('787', 'Baltimore'),
+        ('1213', 'Salt Lake City'),
+        ('283', 'Washington, D.C.'),
+        ('302', 'San Diego'),
+        ('604', 'Tampa'),
+        ('286', 'Portland'),
+        ('586', 'Fort Lauderdale'),
+        ('289', 'Boston'),
+        ('277', 'Houston'),
+        ('301', 'Phoenix'),
+        ('601', 'Orlando'),
+        ('3976', 'Newark'),
+        ('303', 'Charlotte'),
+        ('279', 'Seattle'),
+        ('282', 'Las Vegas'),
+    )
+
 class ZomatoForm(forms.Form):
-    searchkeyword = forms.CharField()
-    cuisines = forms.CharField()
+    searchkeyword = forms.CharField(required=False)
+    cuisines = forms.CharField(required=False)
+    citiesList = forms.ChoiceField(label='Cities', required=False, choices=cities)
+
 
 class Hotels(forms.Form):
     city = forms.CharField(required=True, label='Destination City')

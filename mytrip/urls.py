@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 from . import views
 from django.views.generic import TemplateView
-from .views import weather, flights, getzomato, hotels
+from .views import weather, starter, getzomato, hotels,flights
 
 
 
@@ -16,6 +16,7 @@ urlpatterns = [
     # url(r'^$', views.home, name='home'),
     url(r'^home/$', views.home, name='home'),
     url(r'^register/$', views.register, name='register'),
+    path('starter/', starter.as_view(), name='starter'),
     path('flights/', flights.as_view(), name='flights'),
     path('hotels/', hotels.as_view(), name='hotels'),
     path('weather/', weather.as_view(), name='weather'),

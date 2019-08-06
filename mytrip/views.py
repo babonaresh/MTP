@@ -31,10 +31,56 @@ def register(request):
     return render(request, 'mytrip/register.html', {'user_form': user_form})
 
 
-
-
 class flights(TemplateView):
     template_name = 'mytrip/flights.html'
+
+
+    def get(self, request):
+        # if request.method == 'POST':
+        #     radio = form.cleaned_data['one/two']
+        #     if radio=='one':
+        #         form = FlightsFormOne()
+        #         return render(request, self.template_name, {'form': form})
+        #     else:
+                form = FlightsForm()
+                return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        data = {}
+        # if request.method == 'POST':
+        form = FlightsForm(request.POST)
+        if form.is_valid():
+            input1 = form.cleaned_data['originplace']
+            origin, orgcity = input1.split("-")
+            print(origin)
+            print(orgcity)
+            input2 = form.cleaned_data['destinationplace']
+            destination, destcity = input2.split("-")
+            url = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/'+ origin + '/' + destination + '/' + (form.cleaned_data['outboundpartialdate']).strftime("%Y-%m-%d")+ '/' + (form.cleaned_data['inboundpartialdate']).strftime("%Y-%m-%d")
+            headers = {'X-RapidAPI-Key': settings.RAPIDAPI_API_KEY}
+            api_response = requests.get(url, headers=headers)
+            if api_response.status_code == 200:
+                form = FlightsForm()
+                header= "Below are the Details for you Trip"
+                context = {
+                    'origin': origin,
+                    'destination': destination,
+                    'data': api_response.json(),
+                    'form': form,
+                    'header': header,
+                }
+                return render(request, self.template_name, context)
+            else:
+                error = 'Please Check the Details you entered'
+                form = FlightsForm()
+                context = {
+                    'error' : error,
+                    'form' : form,
+                }
+                return render(request, self.template_name,context)
+
+class starter(TemplateView):
+    template_name = 'mytrip/starter.html'
 
 
     def get(self, request):
@@ -143,7 +189,11 @@ class flights(TemplateView):
                     'description': dest_data['weather'][0]['description'],
                     'icon': dest_data['weather'][0]['icon'],
                 }
-
+                # Resturants Integration Starts
+                zomato_api = 'https://developers.zomato.com/api/v2.1/search?&entity_id=' + destcity + "&entity_type=city&count=20&sort=rating&order=desc"
+                zomato_header = {"User-agent": "curl/7.43.0", "Accept": "application/json","user_key": "50bf80e7cc40a8869d99583c024cb58a"}
+                # Resturants Integration Ends
+                # print(map_values)
                 origin_weather.append(origin_city_weather)
                 destination_weather.append(destination_city_weather)
 
@@ -181,6 +231,7 @@ class flights(TemplateView):
                     "start":start,
                     "end":end,
                     "place_json": place_json,
+                    'zomato': requests.get(zomato_api, headers=zomato_header).json()
                     }
 
                 return render(request, self.template_name, context,)
@@ -285,17 +336,23 @@ class getzomato(TemplateView):
         if request.method == 'POST':
             if form.is_valid():
                 cuisines = form.cleaned_data['cuisines']
-                main_api = 'https://developers.zomato.com/api/v2.1/search?q=' +form.cleaned_data['searchkeyword'] + '&cuisines=' + form.cleaned_data['cuisines']
+                main_api = 'https://developers.zomato.com/api/v2.1/search?q=' +form.cleaned_data['searchkeyword'] + '&cuisines=' + form.cleaned_data['cuisines'] + "&entity_id=" + form.cleaned_data['citiesList'] + "&entity_type=city&count=20&sort=rating&order=desc"
                 header = {"User-agent": "curl/7.43.0", "Accept": "application/json",
                           "user_key": "50bf80e7cc40a8869d99583c024cb58a"}
-                response = requests.get(main_api, headers=header)
-                Zomato_data = []
                 form = ZomatoForm
                 context = {
                     'cuisines':cuisines,
                     'data': requests.get(main_api, headers=header).json(),
                     'form': form,
                     }
+                try:
+                    context = {
+                        'cuisines': cuisines,
+                        'data': requests.get(main_api, headers=header).json(),
+                        'form': form,
+                    }
+                except:
+                    pass
                 return render(request, self.template_name, context)
 
 

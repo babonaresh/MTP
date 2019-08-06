@@ -2,14 +2,40 @@
 {% load staticfiles %}
 {% load crispy_forms_tags %}
 {% block content %}
+<style>
+    #table-wrapper {
+  position:relative;
+    }
+    #table-scroll {
+      height:500px;
+      overflow:auto;
+      margin-top:20px;
+    }
+    #table-wrapper table {
+      width:100%;
 
+    }
+    #table-wrapper table * {
+      background:white;
+      color:black;
+    }
+    #table-wrapper table thead th .text {
+      position:absolute;
+      top:-20px;
+      z-index:2;
+      height:20px;
+      width:35%;
+      border:1px solid red;
+    }
+
+</style>
 <br>
 <br>
 
 
         <div class="container">
 
-            <h2 class="text-center">Check Hotels?</h2>
+            <h2 class="text-center">Check for Accomodations</h2>
 <br>
 
               <form method="POST">
@@ -17,18 +43,16 @@
                   <div class="row">
                       <div class="col-md-5">
                           {{form|crispy}}
-                          <!--<input type="text" name="city" class="w3-input" style="padding-left: 20px" placeholder="Enter city name ex: Omaha" required>-->
-                      </div>
-
-                      <div class="col-md-3">
-                      <br>
                           <button type="submit" class="btn btn-login">
                                     Check
                                 </button>
                       </div>
+
                   </div>
                     </form>
             <h4 style="color: red">{{error}}</h4>
+            <div id="table-wrapper">
+          <div id="table-scroll">
 <table class="table" style="background-color: white">
     <thead>
     <th>Start Date</th>
@@ -69,11 +93,13 @@
         </td>
     <td>{{hotel_values.rating}}</td>
     <td>sub-total:{{hotel_values.sub_total}}<br>fee: {{hotel_values.fee}}<br>total:{{hotel_values.total}}
-    <a href="{{hotel_values.link}}" target="_blank">view deal</a></td>
+    <a href="{{hotel_values.link}}" target="_blank" style="color:blue">view deal</a></td>
 
     </tbody>
      {%endfor%}
 </table>
+          </div>
+            </div>
 
         </div>
 
