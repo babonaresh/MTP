@@ -2,20 +2,50 @@
 {% load staticfiles %}
 {% load crispy_forms_tags %}
 {% block content %}
+<style>
+    #table-wrapper {
+  position:relative;
+    }
+    #table-scroll {
+      height:500px;
+      overflow:auto;
+      margin-top:20px;
+    }
+    #table-wrapper table {
+      width:100%;
+
+    }
+    #table-wrapper table * {
+      background:white;
+      color:black;
+    }
+    #table-wrapper table thead th .text {
+      position:absolute;
+      top:-20px;
+      z-index:2;
+      height:20px;
+      width:35%;
+      border:1px solid red;
+    }
+
+</style>
 <br>
   <div class="container">
-    <h1>Zomato</h1>
+    <h1>Search for places to eat</h1>
     <form method="POST">
         <table>
           {% csrf_token %}
           {{ form|crispy }}
-        <tr><td class = btn btn-login><input type="submit" name="Search" value="Search"></td></tr>
+        <button type="submit" class="btn btn-login">
+                                    search
+                                </button>
         </table>
         {{error}}
     </form>
 
   <div>
-
+<div id="table-wrapper">
+          <div id="table-scroll">
   <table class="table" style="background-color: white">
       <thead>
       <th>Name</th>
@@ -34,7 +64,9 @@
       </tbody>
     {% endfor %}
   </table>
-
+          </div>
+</div>
+      <br>
 </div>
   </div>
 {% endblock %}

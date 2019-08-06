@@ -138,9 +138,11 @@ padding : 50px 0;
         <div class="collapse navbar-collapse" id="myNavbar" style="float: right;">
             <ul class="nav navbar-nav">
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'mytrip:home' %}">Home</a></li>
+                <li><a href="{% url 'mytrip:home' %}">Home</a></li>
+                    <li><a href="{% url 'mytrip:starter' %}">Plan</a></li>
                     <li><a href="{% url 'mytrip:location' %}">Location</a></li>
                     <li><a href="{% url 'mytrip:flights' %}">Flights</a></li>
+                    <li><a href="{% url 'mytrip:hotels' %}">Hotels</a></li>
                 <li><a href="{% url 'mytrip:weather' %}">weather</a></li>
                 <li><a href="{% url 'mytrip:getzomato' %}">Food</a></li>
                 {% endif %}

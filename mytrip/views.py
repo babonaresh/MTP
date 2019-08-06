@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import *
-from .forms import LoginForm,UserRegistrationForm, CityForm, FlightsForm, ZomatoForm
+from .forms import LoginForm,UserRegistrationForm, CityForm, FlightsForm, ZomatoForm, Hotels
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
@@ -31,10 +31,56 @@ def register(request):
     return render(request, 'mytrip/register.html', {'user_form': user_form})
 
 
-
-
 class flights(TemplateView):
     template_name = 'mytrip/flights.html'
+
+
+    def get(self, request):
+        # if request.method == 'POST':
+        #     radio = form.cleaned_data['one/two']
+        #     if radio=='one':
+        #         form = FlightsFormOne()
+        #         return render(request, self.template_name, {'form': form})
+        #     else:
+                form = FlightsForm()
+                return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        data = {}
+        # if request.method == 'POST':
+        form = FlightsForm(request.POST)
+        if form.is_valid():
+            input1 = form.cleaned_data['originplace']
+            origin, orgcity = input1.split("-")
+            print(origin)
+            print(orgcity)
+            input2 = form.cleaned_data['destinationplace']
+            destination, destcity = input2.split("-")
+            url = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/'+ origin + '/' + destination + '/' + (form.cleaned_data['outboundpartialdate']).strftime("%Y-%m-%d")+ '/' + (form.cleaned_data['inboundpartialdate']).strftime("%Y-%m-%d")
+            headers = {'X-RapidAPI-Key': settings.RAPIDAPI_API_KEY}
+            api_response = requests.get(url, headers=headers)
+            if api_response.status_code == 200:
+                form = FlightsForm()
+                header= "Below are the Details for you Trip"
+                context = {
+                    'origin': origin,
+                    'destination': destination,
+                    'data': api_response.json(),
+                    'form': form,
+                    'header': header,
+                }
+                return render(request, self.template_name, context)
+            else:
+                error = 'Please Check the Details you entered'
+                form = FlightsForm()
+                context = {
+                    'error' : error,
+                    'form' : form,
+                }
+                return render(request, self.template_name,context)
+
+class starter(TemplateView):
+    template_name = 'mytrip/starter.html'
 
 
     def get(self, request):
@@ -57,8 +103,7 @@ class flights(TemplateView):
             end = form.cleaned_data['inboundpartialdate'].strftime("%m/%d/%Y")
             username = request.user.username
             if UserInterest.objects.filter(user=username).exists():
-                if UserInterest.objects.filter(user=username).filter(origin=orgcity).filter(
-                        destination=destcity).exists():
+                if UserInterest.objects.filter(user=username).filter(origin=orgcity).filter(destination=destcity).exists():
                     object = UserInterest.objects.filter(user=username).get(origin=orgcity, destination=destcity)
                     object.searches = object.searches + 1
                     object.save()
@@ -68,6 +113,7 @@ class flights(TemplateView):
             else:
                 entry = UserInterest(user=username, origin=orgcity, destination=destcity, searches=1)
                 entry.save()
+
             url = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/'+ origin + '/' + destination+ '/' + (form.cleaned_data['outboundpartialdate']).strftime("%Y-%m-%d")+ '/' + (form.cleaned_data['inboundpartialdate']).strftime("%Y-%m-%d")
             headers = {'X-RapidAPI-Key': settings.RAPIDAPI_API_KEY}
             api_response = requests.get(url, headers=headers)
@@ -84,6 +130,37 @@ class flights(TemplateView):
             # print(hotel_data)
             hotel_json=[]
             amn_json=[]
+            place_json=[]
+            places= hotel_data["MetaData"]["HotelMetaData"]["Neighborhoods"]
+            for place in hotel_data["MetaData"]["HotelMetaData"]["Neighborhoods"]:
+                hotel_area = {
+                    "city": place['City'],
+                    "state": place['State'],
+                    "country": place['Country'],
+                    "code": place['Id'],
+                    "centroid": place['Centroid'],
+                    "name": place['Name'],
+                }
+                place_json.append(hotel_area)
+                print(hotel_area)
+            for amn in hotel_data["MetaData"]["HotelMetaData"]["Amenities"]:
+                hotel_amn={
+                    "code":amn['Code'],
+                    "description":amn['Description'],
+                }
+                amn_json.append(hotel_amn)
+            for results in hotel_data['Result'][:5]:
+                hotel_values = {
+                    "sub_total": results['SubTotal'],
+                    "fee": results['TaxesAndFees'],
+                    "total": results['TotalPrice'],
+                    "hotel_codes": results['AmenityCodes'],
+                    "nights": results['Nights'],
+                    "rating": results['StarRating'],
+                    "id": results['NeighborhoodId'],
+                    "link": results['DeepLink'],
+                }
+                hotel_json.append(hotel_values)
             map_json = []
             map_data = requests.get(map).json()
             map_values = {
@@ -93,27 +170,9 @@ class flights(TemplateView):
                 "duration": map_data['routes'][0]['legs'][0]['duration']['text'],
             }
             map_json.append(map_values)
-            print(map_values)
             if (api_response.status_code == 200) & (org_data['cod']==200) & (dest_data['cod']== 200):
                 form = FlightsForm()
-                places = hotel_data["MetaData"]["HotelMetaData"]["Neighborhoods"]
-                for amn in hotel_data["MetaData"]["HotelMetaData"]["Amenities"]:
-                    hotel_amn = {
-                        "code": amn['Code'],
-                        "description": amn['Description'],
-                    }
-                    amn_json.append(hotel_amn)
-                for results in hotel_data['Result'][:5]:
-                    hotel_values = {
-                        "sub_total": results['SubTotal'],
-                        "fee": results['TaxesAndFees'],
-                        "total": results['TotalPrice'],
-                        "hotel_codes": results['AmenityCodes'],
-                        "nights": results['Nights'],
-                        "rating": results['StarRating'],
-                    }
-                    # print(hotel_values)
-                    hotel_json.append(hotel_values)
+
                 flights_data = []
                 origin_weather = []
                 destination_weather = []
@@ -130,12 +189,14 @@ class flights(TemplateView):
                     'description': dest_data['weather'][0]['description'],
                     'icon': dest_data['weather'][0]['icon'],
                 }
-
+                # Resturants Integration Starts
+                zomato_api = 'https://developers.zomato.com/api/v2.1/search?&entity_id=' + destcity + "&entity_type=city&count=20&sort=rating&order=desc"
+                zomato_header = {"User-agent": "curl/7.43.0", "Accept": "application/json","user_key": "50bf80e7cc40a8869d99583c024cb58a"}
+                # Resturants Integration Ends
                 # print(map_values)
                 origin_weather.append(origin_city_weather)
                 destination_weather.append(destination_city_weather)
-                # print(origin_weather)
-                # print(destination_weather)
+
                 for quote in flights_json['Quotes']:
                     # if quote['InboundLeg']['CarrierIds']== or  quote['OutboundLeg']['CarrierIds'] ==
                     airline_data={
@@ -154,8 +215,6 @@ class flights(TemplateView):
                             }
                     flights_data.append(airline_data)
 
-                    # print(flights_data)
-
                 header = "Below are the Details for you Trip"
                 context = {
                     'flights_data': flights_data,
@@ -171,8 +230,10 @@ class flights(TemplateView):
                     "hotel_json":hotel_json,
                     "start":start,
                     "end":end,
+                    "place_json": place_json,
+                    'zomato': requests.get(zomato_api, headers=zomato_header).json()
                     }
-                # print(context)
+
                 return render(request, self.template_name, context,)
         else:
             error = 'Please Check the Details you entered'
@@ -275,15 +336,100 @@ class getzomato(TemplateView):
         if request.method == 'POST':
             if form.is_valid():
                 cuisines = form.cleaned_data['cuisines']
-                main_api = 'https://developers.zomato.com/api/v2.1/search?q=' +form.cleaned_data['searchkeyword'] + '&cuisines=' + form.cleaned_data['cuisines']
+                main_api = 'https://developers.zomato.com/api/v2.1/search?q=' +form.cleaned_data['searchkeyword'] + '&cuisines=' + form.cleaned_data['cuisines'] + "&entity_id=" + form.cleaned_data['citiesList'] + "&entity_type=city&count=20&sort=rating&order=desc"
                 header = {"User-agent": "curl/7.43.0", "Accept": "application/json",
                           "user_key": "50bf80e7cc40a8869d99583c024cb58a"}
-                response = requests.get(main_api, headers=header)
-                Zomato_data = []
                 form = ZomatoForm
                 context = {
                     'cuisines':cuisines,
                     'data': requests.get(main_api, headers=header).json(),
                     'form': form,
                     }
+                try:
+                    context = {
+                        'cuisines': cuisines,
+                        'data': requests.get(main_api, headers=header).json(),
+                        'form': form,
+                    }
+                except:
+                    pass
                 return render(request, self.template_name, context)
+
+
+class hotels(TemplateView):
+    template_name = 'mytrip/hotels.html'
+
+
+    def get(self, request):
+                form = Hotels()
+                return render(request, self.template_name, {'form': form})
+
+
+
+    def post(self, request):
+        # if request.method == 'POST':
+        form = Hotels(request.POST)
+        if form.is_valid():
+            city = form.cleaned_data['city']
+            start = form.cleaned_data['indate'].strftime("%m/%d/%Y")
+            end = form.cleaned_data['outdate'].strftime("%m/%d/%Y")
+            print(city, start, end)
+            hotel = 'http://api.hotwire.com/v1/search/hotel?apiKey=eew8fwafckbky8563xfyw6te&format=json&startdate='+start+'&enddate='+end+'&dest='+city+'&children=1&adults=2&rooms=1&limit=5'
+            hotel_data = requests.get(hotel).json()
+            # print(hotel_data)
+            hotel_json=[]
+            amn_json=[]
+            place_json=[]
+            if hotel_data['StatusCode'] == "0":
+                places = hotel_data["MetaData"]["HotelMetaData"]["Neighborhoods"]
+                for place in hotel_data["MetaData"]["HotelMetaData"]["Neighborhoods"]:
+                    hotel_area={
+                        "city":place['City'],
+                        "state": place['State'],
+                        "country": place['Country'],
+                        "code": place['Id'],
+                        "centroid":place['Centroid'],
+                        "name":place['Name'],
+                    }
+                    place_json.append(hotel_area)
+                    print(hotel_area)
+                for amn in hotel_data["MetaData"]["HotelMetaData"]["Amenities"]:
+                    hotel_amn={
+                        "code":amn['Code'],
+                        "description":amn['Description'],
+                    }
+                    amn_json.append(hotel_amn)
+                for results in hotel_data['Result'][:5]:
+                    hotel_values={
+                        "sub_total": results['SubTotal'],
+                        "fee": results['TaxesAndFees'],
+                        "total":results['TotalPrice'],
+                        "hotel_codes": results['AmenityCodes'],
+                        "nights": results['Nights'],
+                        "rating": results['StarRating'],
+                        "id": results['NeighborhoodId'],
+                        "link":results['DeepLink'],
+                    }
+                    hotel_json.append(hotel_values)
+
+                context = {
+                        "form": form,
+                        "city": city,
+                        "amenities": amn_json,
+                        "places": places,
+                        "hotel_json": hotel_json,
+                        "start": start,
+                        "end": end,
+                        "place_json":place_json,
+
+                    }
+
+                return render(request, self.template_name, context, )
+        else:
+            error = 'Please Check the Details you entered'
+            form = Hotels()
+            context = {
+                    'error' : error,
+                    'form' : form,
+            }
+            return render(request, self.template_name,context)
