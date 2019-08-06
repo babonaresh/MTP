@@ -1,0 +1,40 @@
+{% extends 'mytrip/base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block content %}
+<br>
+  <div class="container">
+    <h1>Zomato</h1>
+    <form method="POST">
+        <table>
+          {% csrf_token %}
+          {{ form|crispy }}
+        <tr><td class = btn btn-login><input type="submit" name="Search" value="Search"></td></tr>
+        </table>
+        {{error}}
+    </form>
+
+  <div>
+
+  <table class="table" style="background-color: white">
+      <thead>
+      <th>Name</th>
+      <th>Timings</th>
+      <th>Avg. Price for 2</th>
+      <th>Location Address</th>
+      <th>Review Ratings</th>
+      </thead>
+    {% for eachResturant in data.restaurants %}
+      <tbody>
+      <td>{{eachResturant.restaurant.name}}</td>
+      <td>{{eachResturant.restaurant.timings}}</td>
+      <td>{{eachResturant.restaurant.average_cost_for_two}}</td>
+      <td>{{eachResturant.restaurant.location.address}}</td>
+      <td>{{eachResturant.restaurant.user_rating.aggregate_rating}}</td>
+      </tbody>
+    {% endfor %}
+  </table>
+
+</div>
+  </div>
+{% endblock %}
