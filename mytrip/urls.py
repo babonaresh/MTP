@@ -5,7 +5,7 @@ from django.urls import path
 from . import views
 from django.views.generic import TemplateView
 from .views import weather, starter, getzomato, hotels,flights,location
-
+from rest_framework.urlpatterns import format_suffix_patterns
 
 
 app_name = 'mytrip'
@@ -31,5 +31,7 @@ urlpatterns = [
     url(r'^password-reset/$', reset, {'post_reset_redirect': '/password-reset/done/',
                                       'email_template_name': 'registration/password_reset_email.html'},
         name='password_reset'),
-
+    url(r'^userinterest_json/', views.UserInterestList.as_view()),
     ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)

@@ -499,3 +499,18 @@ class hotels(TemplateView):
                     'err':err,
             }
             return render(request, self.template_name,context)
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import UserInterestSerializer
+
+# List at the end of the views.py
+# Lists all customers
+class UserInterestList(APIView):
+
+    def get(self,request):
+        userinterest_json = UserInterest.objects.all()
+        serializer = UserInterestSerializer(userinterest_json, many=True)
+        return Response(serializer.data)
