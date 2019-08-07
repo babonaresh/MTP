@@ -2,18 +2,95 @@
 {% load staticfiles %}
 {% load crispy_forms_tags %}
 {% block content %}
+<style>
+    #table-wrapper {
+  position:relative;
+    }
+    #table-scroll {
+      height:500px;
+      overflow:auto;
+      margin-top:20px;
+    }
+    #table-wrapper table {
+      width:100%;
 
+    }
+    #table-wrapper table * {
+      background:white;
+      color:black;
+    }
+    #table-wrapper table thead th .text {
+      position:absolute;
+      top:-20px;
+      z-index:2;
+      height:20px;
+      width:35%;
+      border:1px solid red;
+    }
+
+    .date{
+        width:200px;
+    }
+    .myForm {
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 1em;
+padding: 0.5em;
+border: 1px solid #ccc;
+border-radius: 3px;
+}
+
+.myForm * {
+box-sizing: border-box;
+}
+
+.myForm input {
+border: 1px solid #ccc;
+border-radius: 3px;
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 0.5em;
+padding: 0.5em;
+}
+
+</style>
 <div class="container">
     <div class="row">
 
 	<form method="POST">
-		<div class="col-md-5">
-			{% csrf_token %}
-            {{form|crispy}}
-			<input type="submit" class="btn btn-login" name="Search" value="Search">
+        {% csrf_token %}
+        <div class="row">
             <br>
-            <br>
+            <div class="col-md-1"></div>
+
+            <div class="col-md-5">
+                <h4><strong>Origin</strong></h4>
+                {{form.originplace}}
         </div>
+
+		<div class="col-md-5">
+            <h4><strong>Destination</strong></h4>
+            {{form.destinationplace}}
+        </div>
+        </div>
+        <div class="row">
+            <br>
+            <div class="col-md-1"></div>
+            <div class="col-md-3">
+                <h4><strong>Start Date</strong></h4>
+                {{form.outboundpartialdate}}
+        </div>
+
+		<div class="col-md-3">
+            <h4><strong>Return Date</strong></h4>
+            {{form.inboundpartialdate}}
+        </div>
+            <div class="col-md-3">
+                <br>
+                <br>
+                <input type="submit" class="btn btn-login" style="width: 150px; height: 45px" name="Search" value="Search">
+            </div>
+        </div>
+            <br>
+            <br>
 
        <p style="color: red"> {{error}}</p>
 
@@ -23,7 +100,8 @@
 
     <h2 class="text-center"> {{header}}</h2>
     {% for quote in data.Quotes %}
-
+<div id="table-wrapper">
+          <div id="table-scroll">
     <table class="table" style="background-color: white">
         <thead>
         <th>Airlines</th>
@@ -50,6 +128,8 @@
 	{% endfor %}
 
 	<!--{{data}}-->
+</div>
+</div>
 </div>
 </div>
 {% endblock %}

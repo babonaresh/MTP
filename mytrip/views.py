@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import *
-from .forms import LoginForm,UserRegistrationForm, CityForm, FlightsForm, ZomatoForm, Hotels
+from .forms import LoginForm,UserRegistrationForm, CityForm, FlightsForm, ZomatoForm, Hotels, Location
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
@@ -52,8 +52,8 @@ class flights(TemplateView):
         if form.is_valid():
             input1 = form.cleaned_data['originplace']
             origin, orgcity = input1.split("-")
-            print(origin)
-            print(orgcity)
+            # print(origin)
+            # print(orgcity)
             input2 = form.cleaned_data['destinationplace']
             destination, destcity = input2.split("-")
             url = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/'+ origin + '/' + destination + '/' + (form.cleaned_data['outboundpartialdate']).strftime("%Y-%m-%d")+ '/' + (form.cleaned_data['inboundpartialdate']).strftime("%Y-%m-%d")
@@ -95,12 +95,13 @@ class starter(TemplateView):
         if form.is_valid():
             input1 = form.cleaned_data['originplace']
             origin,orgcity = input1.split("-")
-            print(origin)
-            print(orgcity)
+            # print(origin)
+            # print(orgcity)
             input2 = form.cleaned_data['destinationplace']
             destination,destcity = input2.split("-")
             start = form.cleaned_data['outboundpartialdate'].strftime("%m/%d/%Y")
             end = form.cleaned_data['inboundpartialdate'].strftime("%m/%d/%Y")
+
             username = request.user.username
             if UserInterest.objects.filter(user=username).exists():
                 if UserInterest.objects.filter(user=username).filter(origin=orgcity).filter(destination=destcity).exists():
@@ -131,36 +132,7 @@ class starter(TemplateView):
             hotel_json=[]
             amn_json=[]
             place_json=[]
-            places= hotel_data["MetaData"]["HotelMetaData"]["Neighborhoods"]
-            for place in hotel_data["MetaData"]["HotelMetaData"]["Neighborhoods"]:
-                hotel_area = {
-                    "city": place['City'],
-                    "state": place['State'],
-                    "country": place['Country'],
-                    "code": place['Id'],
-                    "centroid": place['Centroid'],
-                    "name": place['Name'],
-                }
-                place_json.append(hotel_area)
-                print(hotel_area)
-            for amn in hotel_data["MetaData"]["HotelMetaData"]["Amenities"]:
-                hotel_amn={
-                    "code":amn['Code'],
-                    "description":amn['Description'],
-                }
-                amn_json.append(hotel_amn)
-            for results in hotel_data['Result'][:5]:
-                hotel_values = {
-                    "sub_total": results['SubTotal'],
-                    "fee": results['TaxesAndFees'],
-                    "total": results['TotalPrice'],
-                    "hotel_codes": results['AmenityCodes'],
-                    "nights": results['Nights'],
-                    "rating": results['StarRating'],
-                    "id": results['NeighborhoodId'],
-                    "link": results['DeepLink'],
-                }
-                hotel_json.append(hotel_values)
+
             map_json = []
             map_data = requests.get(map).json()
             map_values = {
@@ -170,7 +142,41 @@ class starter(TemplateView):
                 "duration": map_data['routes'][0]['legs'][0]['duration']['text'],
             }
             map_json.append(map_values)
-            if (api_response.status_code == 200) & (org_data['cod']==200) & (dest_data['cod']== 200):
+            if (api_response.status_code == 200) & (org_data['cod']==200) & (dest_data['cod']== 200) & (hotel_data['StatusCode'] == "0"):
+                print("success")
+                places= hotel_data["MetaData"]["HotelMetaData"]["Neighborhoods"]
+                for place in hotel_data["MetaData"]["HotelMetaData"]["Neighborhoods"]:
+                    hotel_area = {
+                        "city": place['City'],
+                        "state": place['State'],
+                        "country": place['Country'],
+                        "code": place['Id'],
+                        "centroid": place['Centroid'],
+                        "name": place['Name'],
+                    }
+                    place_json.append(hotel_area)
+                    # print(hotel_area)
+                for amn in hotel_data["MetaData"]["HotelMetaData"]["Amenities"]:
+                    hotel_amn={
+                        "code":amn['Code'],
+                        "description":amn['Description'],
+                    }
+                    amn_json.append(hotel_amn)
+                for results in hotel_data['Result'][:5]:
+                    hotel_values = {
+                        "sub_total": results['SubTotal'],
+                        "fee": results['TaxesAndFees'],
+                        "total": results['TotalPrice'],
+                        "hotel_codes": results['AmenityCodes'],
+                        "nights": results['Nights'],
+                        "rating": results['StarRating'],
+                        "id": results['NeighborhoodId'],
+                        "link": results['DeepLink'],
+                    }
+                    hotel_json.append(hotel_values)
+
+
+
                 form = FlightsForm()
 
                 flights_data = []
@@ -216,6 +222,7 @@ class starter(TemplateView):
                     flights_data.append(airline_data)
 
                 header = "Below are the Details for you Trip"
+                th="th"
                 context = {
                     'flights_data': flights_data,
                     'origin_weather': origin_weather,
@@ -231,18 +238,33 @@ class starter(TemplateView):
                     "start":start,
                     "end":end,
                     "place_json": place_json,
-                    'zomato': requests.get(zomato_api, headers=zomato_header).json()
+                    'zomato': requests.get(zomato_api, headers=zomato_header).json(),
+                    'th': th,
                     }
 
                 return render(request, self.template_name, context,)
+            else:
+                error = 'Make sure the difference between dates is less than 30Days'
+
+                err= 'err'
+                form = FlightsForm()
+                context = {
+                        'err': err,
+                        'error' : error,
+                        'form' : form,
+                }
+                print(context)
+                return render(request, self.template_name,context)
         else:
-            error = 'Please Check the Details you entered'
+            error = 'Make sure the difference between dates is less than 30Days'
+            err = 'err',
             form = FlightsForm()
             context = {
-                    'error' : error,
-                    'form' : form,
+                'err': err,
+                'error': error,
+                'form': form,
             }
-            return render(request, self.template_name,context)
+            return render(request, self.template_name, context)
 
 
 
@@ -287,8 +309,8 @@ class weather(TemplateView):
                 for ft in forecast['list']:
                     dates = ft['dt_txt']
                     forecast_date, forecast_time = dates.split(" ")
-                    print(forecast_date)
-                    print(forecast_time)
+                    # print(forecast_date)
+                    # print(forecast_time)
                     forecast_weather = {
                         'temp': ft['main']['temp'],
                         'description': ft['weather'][0]['description'],
@@ -300,7 +322,7 @@ class weather(TemplateView):
                     }
                     # print(forecast_weather)
                     forecast_data.append(forecast_weather)
-                print(forecast_data)
+                # print(forecast_data)
                 context = {
                     'weather_data': weather_data,
                     'form': form,
@@ -317,12 +339,42 @@ class weather(TemplateView):
                 return render(request, self.template_name, context)
 
 
+class location(TemplateView):
+    template_name = 'mytrip/location.html'
 
+    def get(self, request):
+        form = Location()
+        return render(request, self.template_name, {'form': form})
 
-def location(request):
-   return render(request, 'mytrip/location.html',
-                 {'mytrip': location})
-
+    def post(self,request):
+        form=Location(request.POST)
+        if request.method == 'POST':
+            if form.is_valid():
+                orgcity = form.cleaned_data['originplace']
+                destcity = form.cleaned_data['destinationplace']
+                map = 'https://maps.googleapis.com/maps/api/directions/json?origin="' + orgcity + '"&destination="' + destcity + '"&key=AIzaSyDohjPYxETfcjKzjHoiqYGenuirmd0jWg0'
+                map_json = []
+                map_data = requests.get(map).json()
+                map_values = {
+                    "start": map_data['routes'][0]['legs'][0]['start_address'],
+                    "end": map_data['routes'][0]['legs'][0]['end_address'],
+                    "distance": map_data['routes'][0]['legs'][0]['distance']['text'],
+                    "duration": map_data['routes'][0]['legs'][0]['duration']['text'],
+                }
+                map_json.append(map_values)
+                context = {
+                    'map_json': map_json,
+                    'form': form,
+                 }
+                return render(request, self.template_name, context)
+            else:
+                error = 'Please Check Details'
+                form = CityForm()
+                context = {
+                    'error': error,
+                    'form': form,
+                }
+                return render(request, self.template_name, context)
 
 class getzomato(TemplateView):
     template_name = 'mytrip/getzomato.html'
@@ -340,16 +392,19 @@ class getzomato(TemplateView):
                 header = {"User-agent": "curl/7.43.0", "Accept": "application/json",
                           "user_key": "50bf80e7cc40a8869d99583c024cb58a"}
                 form = ZomatoForm
+                th = "th"
                 context = {
                     'cuisines':cuisines,
                     'data': requests.get(main_api, headers=header).json(),
                     'form': form,
+                    'th': th,
                     }
                 try:
                     context = {
                         'cuisines': cuisines,
                         'data': requests.get(main_api, headers=header).json(),
                         'form': form,
+                        'th': th,
                     }
                 except:
                     pass
@@ -373,7 +428,7 @@ class hotels(TemplateView):
             city = form.cleaned_data['city']
             start = form.cleaned_data['indate'].strftime("%m/%d/%Y")
             end = form.cleaned_data['outdate'].strftime("%m/%d/%Y")
-            print(city, start, end)
+            # print(city, start, end)
             hotel = 'http://api.hotwire.com/v1/search/hotel?apiKey=eew8fwafckbky8563xfyw6te&format=json&startdate='+start+'&enddate='+end+'&dest='+city+'&children=1&adults=2&rooms=1&limit=5'
             hotel_data = requests.get(hotel).json()
             # print(hotel_data)
@@ -381,7 +436,7 @@ class hotels(TemplateView):
             amn_json=[]
             place_json=[]
             if hotel_data['StatusCode'] == "0":
-                places = hotel_data["MetaData"]["HotelMetaData"]["Neighborhoods"]
+                print("success")
                 for place in hotel_data["MetaData"]["HotelMetaData"]["Neighborhoods"]:
                     hotel_area={
                         "city":place['City'],
@@ -392,7 +447,7 @@ class hotels(TemplateView):
                         "name":place['Name'],
                     }
                     place_json.append(hotel_area)
-                    print(hotel_area)
+                    # print(hotel_area)
                 for amn in hotel_data["MetaData"]["HotelMetaData"]["Amenities"]:
                     hotel_amn={
                         "code":amn['Code'],
@@ -411,25 +466,36 @@ class hotels(TemplateView):
                         "link":results['DeepLink'],
                     }
                     hotel_json.append(hotel_values)
-
+                th="th"
                 context = {
                         "form": form,
                         "city": city,
                         "amenities": amn_json,
-                        "places": places,
                         "hotel_json": hotel_json,
                         "start": start,
                         "end": end,
                         "place_json":place_json,
+                        "th":th,
 
                     }
 
                 return render(request, self.template_name, context, )
+            else:
+                msg="Make sure the difference between dates is less than 30Days"
+                err = 'err'
+                context={
+                    "msg": msg,
+                    "form":form,
+                    'err': err,
+                }
+                return render(request, self.template_name, context, )
         else:
             error = 'Please Check the Details you entered'
+            err='err'
             form = Hotels()
             context = {
                     'error' : error,
                     'form' : form,
+                    'err':err,
             }
             return render(request, self.template_name,context)

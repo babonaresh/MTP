@@ -28,6 +28,28 @@
       border:1px solid red;
     }
 
+    .date{
+        width:200px;
+    }
+    .myForm {
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 1em;
+padding: 0.5em;
+border: 1px solid #ccc;
+border-radius: 3px;
+}
+
+.myForm * {
+box-sizing: border-box;
+}
+
+.myForm input {
+border: 1px solid #ccc;
+border-radius: 3px;
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 0.5em;
+padding: 0.5em;
+}
 </style>
 <br>
 <br>
@@ -39,21 +61,61 @@
 <br>
 
               <form method="POST">
-                  {% csrf_token %}
-                  <div class="row">
-                      <div class="col-md-5">
-                          {{form|crispy}}
-                          <button type="submit" class="btn btn-login">
-                                    Check
-                                </button>
-                      </div>
 
-                  </div>
+                          {% csrf_token %}
+        <div class="row">
+            <br>
+            <div class="col-md-1"></div>
+
+            <div class="col-md-5">
+                <h4><strong>Destination city</strong></h4>
+                {{form.city}}
+        </div>
+        </div>
+        <div class="row">
+            <br>
+            <div class="col-md-1"></div>
+            <div class="col-md-3">
+                <h4><strong>Check-in Date</strong></h4>
+                {{form.indate}}
+        </div>
+
+		<div class="col-md-3">
+            <h4><strong>Check-out Date</strong></h4>
+            {{form.outdate}}
+        </div>
+            <div class="col-md-3">
+                <br>
+                <br>
+                <input type="submit" class="btn btn-login" style="width: 150px; height: 45px" name="Search" value="Search">
+            </div>
+        </div>
+            <br>
+            <br>
+            {%if err == 'err'%}
+
+            <div class="card" style="background: white">
+            <br>
+                <h4 class="text-center" style="color: red">{{error}}</h4>
+                <br>
+            </div>
+                  {%endif%}
+
                     </form>
-            <h4 style="color: red">{{error}}</h4>
+
+        <br>
+            {%if th == 'th'%}
+
+            <div class="card" style="background: white">
+            <br>
+                <h4 class="text-center" style="color: red">{{error}}</h4>
+            <h4 class="text-center" style="color: red">{{msg}}</h4>
+                <br>
+            </div>
             <div id="table-wrapper">
           <div id="table-scroll">
-<table class="table" style="background-color: white">
+
+<table class="table" style="background-color: white;">
     <thead>
     <th>Start Date</th>
     <th>End Date</th>
@@ -63,9 +125,9 @@
     <th>Rating</th>
     <th>total</th>
     </thead>
+
     {%for hotel_values in hotel_json%}
     <tbody>
-
     <td>{{start}}</td>
     <td>{{end}}</td>
     <td>{{hotel_values.nights}}</td>
@@ -97,9 +159,10 @@
 
     </tbody>
      {%endfor%}
+    {%endif%}
 </table>
           </div>
-            </div>
+          </div>
 
         </div>
 
