@@ -1,11 +1,8 @@
 {% extends 'mytrip/base.html' %}
 {% load staticfiles %}
-
-{% block title %}
-
-{% endblock %}
-
+{% load crispy_forms_tags %}
 {% block content %}
+    <div class="container">
     <!--<iframe-->
       <!--width="300"-->
       <!--height="300"-->
@@ -18,6 +15,7 @@
     <!--padding: 10px 20px;-->
 
 <html>
+
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
@@ -106,6 +104,7 @@
       }
     </style>
   </head>
+
   <body>
     <input id="pac-input" class="controls" type="text" placeholder="Search Box">
     <div id="map"></div>
@@ -193,5 +192,5 @@
 
 
 
-
+</div>
 {% endblock %}
