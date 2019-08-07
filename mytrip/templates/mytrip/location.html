@@ -6,16 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    <!--<iframe-->
-      <!--width="300"-->
-      <!--height="300"-->
-      <!--frameborder="0" style="border:0"-->
-      <!--src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDohjPYxETfcjKzjHoiqYGenuirmd0jWg0-->
-        <!--&q=Eiffel+Tower,Paris+France" allowfullscreen>-->
 
-    <!--</iframe>-->
-
-    <!--padding: 10px 20px;-->
 
 <html>
   <head>
@@ -104,90 +95,117 @@
       #target {
         width: 345px;
       }
+          .myForm {
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 1em;
+padding: 0.5em;
+border: 1px solid #ccc;
+border-radius: 3px;
+             width: 250px;
+}
+
+.myForm * {
+box-sizing: border-box;
+}
+
+.myForm input {
+border: 1px solid #ccc;
+border-radius: 3px;
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 0.5em;
+padding: 0.5em;
+  width: 100px;
+}
     </style>
   </head>
   <body>
-    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+  <div class="container">
+    <div class="row">
+  	<form method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <br>
+            <div class="col-md-1"></div>
+
+            <div class="col-md-3">
+                <h4><strong>Origin</strong></h4>
+                {{form.originplace}}
+        </div>
+
+		<div class="col-md-3">
+            <h4><strong>Destination</strong></h4>
+            {{form.destinationplace}}
+        </div>
+          <div class="col-md-3">
+            <br>
+            <br>
+                <input type="submit" class="btn btn-login" style="width: 150px; height: 45px" name="Search" value="Search">
+            </div>
+        </div>
+    </form>
+    {% for map_values in map_json %}
+    <div style="display: none">
+    <b>Start: </b>
+    <input id="start" type="text" value="{{map_values.start}}">
+    <b>End: </b>
+    <input id="end" type="text" value="{{map_values.end}}">
+    </div>
+<div class="row">
+    <div class="col-sm-1"></div>
+    <div class="col-md-6">
     <div id="map"></div>
+
+</div>
+
+    <div class="col-md-5">
+
+  <div class="w3-card-4" style="width:90%; background-color: white;border: 1px;">
+    <header class="w3-container w3-light-grey" style="align-content: center; background-color: powderblue;padding: 0.5px">
+      <h2 class="text-center">{{map_values.start}} to {{map_values.end}}</h2>
+    </header>
+    <div class="w3-container row">
+        <div class="col-md-1"></div>
+        <div class="col-md-9" style="background-color: white">
+      <h4>Duration: {{map_values.duration}}</h4>
+        <h4>Distance: {{map_values.distance}}</h4>
+        </div>
+  </div>
+             <br>
+            <br>
+</div>
+
+         </div>
+
+    </div>
+</div>
+    {% endfor %}
+    </div>
+  </div>
     <script>
-      // This example adds a search box to a map, using the Google Place Autocomplete
-      // feature. People can enter geographical searches. The search box will return a
-      // pick list containing a mix of places and predicted search terms.
-
-      // This example requires the Places library. Include the libraries=places
-      // parameter when you first load the API. For example:
-      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-
-      function initAutocomplete() {
+      function initMap(directionsService, directionsDisplay) {
+        var directionsService = new google.maps.DirectionsService;
+        var directionsDisplay = new google.maps.DirectionsRenderer;
         var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -33.8688, lng: 151.2195},
-          zoom: 13,
-          mapTypeId: 'roadmap'
+          zoom: 7,
+          center: {lat: 41.85, lng: -87.65}
         });
-
-        // Create the search box and link it to the UI element.
-        var input = document.getElementById('pac-input');
-        var searchBox = new google.maps.places.SearchBox(input);
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-        // Bias the SearchBox results towards current map's viewport.
-        map.addListener('bounds_changed', function() {
-          searchBox.setBounds(map.getBounds());
-        });
-
-        var markers = [];
-        // Listen for the event fired when the user selects a prediction and retrieve
-        // more details for that place.
-        searchBox.addListener('places_changed', function() {
-          var places = searchBox.getPlaces();
-
-          if (places.length == 0) {
-            return;
-          }
-
-          // Clear out the old markers.
-          markers.forEach(function(marker) {
-            marker.setMap(null);
-          });
-          markers = [];
-
-          // For each place, get the icon, name and location.
-          var bounds = new google.maps.LatLngBounds();
-          places.forEach(function(place) {
-            if (!place.geometry) {
-              console.log("Returned place contains no geometry");
-              return;
-            }
-            var icon = {
-              url: place.icon,
-              size: new google.maps.Size(71, 71),
-              origin: new google.maps.Point(0, 0),
-              anchor: new google.maps.Point(17, 34),
-              scaledSize: new google.maps.Size(25, 25)
-            };
-
-            // Create a marker for each place.
-            markers.push(new google.maps.Marker({
-              map: map,
-              icon: icon,
-              title: place.name,
-              position: place.geometry.location
-            }));
-
-            if (place.geometry.viewport) {
-              // Only geocodes have viewport.
-              bounds.union(place.geometry.viewport);
+        directionsDisplay.setMap(map);
+        directionsService.route({
+          origin: document.getElementById('start').value,
+          destination: document.getElementById('end').value,
+          travelMode: 'DRIVING'
+        }, function(response, status) {
+            if (status === 'OK') {
+                directionsDisplay.setDirections(response);
             } else {
-              bounds.extend(place.geometry.location);
+                window.alert('Directions request failed due to ' + status);
             }
-          });
-          map.fitBounds(bounds);
         });
       }
-
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDohjPYxETfcjKzjHoiqYGenuirmd0jWg0&libraries=places&callback=initAutocomplete"
-         async defer></script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDohjPYxETfcjKzjHoiqYGenuirmd0jWg0&callback=initMap">
+    </script>
   </body>
 </html>
 

@@ -92,12 +92,26 @@ padding: 0.5em;
         </div>
             <br>
             <br>
+            {%if err == 'err'%}
 
-       <p style="color: red"> {{error}}</p>
+            <div class="card" style="background: white">
+            <br>
+                <h4 class="text-center" style="color: red">{{error}}</h4>
+                <br>
+            </div>
+                  {%endif%}
+
                     </form>
-            <h4 style="color: red">{{error}}</h4>
 
+        <br>
             {%if th == 'th'%}
+
+            <div class="card" style="background: white">
+            <br>
+                <h4 class="text-center" style="color: red">{{error}}</h4>
+            <h4 class="text-center" style="color: red">{{msg}}</h4>
+                <br>
+            </div>
             <div id="table-wrapper">
           <div id="table-scroll">
 
