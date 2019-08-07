@@ -131,36 +131,39 @@ class starter(TemplateView):
             hotel_json=[]
             amn_json=[]
             place_json=[]
-            places= hotel_data["MetaData"]["HotelMetaData"]["Neighborhoods"]
-            for place in hotel_data["MetaData"]["HotelMetaData"]["Neighborhoods"]:
-                hotel_area = {
-                    "city": place['City'],
-                    "state": place['State'],
-                    "country": place['Country'],
-                    "code": place['Id'],
-                    "centroid": place['Centroid'],
-                    "name": place['Name'],
-                }
-                place_json.append(hotel_area)
-                # print(hotel_area)
-            for amn in hotel_data["MetaData"]["HotelMetaData"]["Amenities"]:
-                hotel_amn={
-                    "code":amn['Code'],
-                    "description":amn['Description'],
-                }
-                amn_json.append(hotel_amn)
-            for results in hotel_data['Result'][:5]:
-                hotel_values = {
-                    "sub_total": results['SubTotal'],
-                    "fee": results['TaxesAndFees'],
-                    "total": results['TotalPrice'],
-                    "hotel_codes": results['AmenityCodes'],
-                    "nights": results['Nights'],
-                    "rating": results['StarRating'],
-                    "id": results['NeighborhoodId'],
-                    "link": results['DeepLink'],
-                }
-                hotel_json.append(hotel_values)
+            if hotel_data['StatusCode'] == "0":
+                print("success")
+                places= hotel_data["MetaData"]["HotelMetaData"]["Neighborhoods"]
+                for place in hotel_data["MetaData"]["HotelMetaData"]["Neighborhoods"]:
+                    hotel_area = {
+                        "city": place['City'],
+                        "state": place['State'],
+                        "country": place['Country'],
+                        "code": place['Id'],
+                        "centroid": place['Centroid'],
+                        "name": place['Name'],
+                    }
+                    place_json.append(hotel_area)
+                    # print(hotel_area)
+                for amn in hotel_data["MetaData"]["HotelMetaData"]["Amenities"]:
+                    hotel_amn={
+                        "code":amn['Code'],
+                        "description":amn['Description'],
+                    }
+                    amn_json.append(hotel_amn)
+                for results in hotel_data['Result'][:5]:
+                    hotel_values = {
+                        "sub_total": results['SubTotal'],
+                        "fee": results['TaxesAndFees'],
+                        "total": results['TotalPrice'],
+                        "hotel_codes": results['AmenityCodes'],
+                        "nights": results['Nights'],
+                        "rating": results['StarRating'],
+                        "id": results['NeighborhoodId'],
+                        "link": results['DeepLink'],
+                    }
+                    hotel_json.append(hotel_values)
+                        
             map_json = []
             map_data = requests.get(map).json()
             map_values = {
