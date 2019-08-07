@@ -68,6 +68,40 @@ class FlightsForm(forms.Form):
     inboundpartialdate = forms.DateField(widget=forms.DateInput(
                 attrs={'type': 'date','class':'myForm date'}
             ),required=True, label= 'End Date')
+city = (
+    ('',''),
+    ('San Francisco', 'San Francisco'),
+    ('Chicago', 'Chicago'),
+    ('Chicago', 'Chicago'),
+    ('Miami', 'Miami'),
+    ('Denver', 'Denver'),
+    ('Atlanta', 'Atlanta'),
+    ('Los Angeles', 'Los Angeles'),
+    ('Dallas', 'Dallas'),
+    ('Minneapolis', 'Minneapolis'),
+    ('Detroit', 'Detroit'),
+    ('Philadelphia', 'Philadelphia'),
+    ('New York', 'New York'),
+    ('Baltimore', 'Baltimore'),
+    ('Salt Lake City', 'Salt Lake City'),
+    ('Washington, D.C.', 'Washington, D.C.'),
+    ('San Diego', 'San Diego'),
+    ('Tampa', 'Tampa'),
+    ('Portland', 'Portland'),
+    ('Fort Lauderdale', 'Fort Lauderdale'),
+    ('Boston', 'Boston'),
+    ('Houston', 'Houston'),
+    ('Phoenix', 'Phoenix'),
+    ('Orlando', 'Orlando'),
+    ('Newark', 'Newark'),
+    ('Charlotte', 'Charlotte'),
+    ('Seattle', 'Seattle'),
+    ('Las Vegas', 'Las Vegas'),
+    ('New York', 'New York'),
+)
+class Location(forms.Form):
+    originplace = forms.ChoiceField(label='Origin',required=True, choices=city,widget=forms.Select(attrs={'class':'myForm ','placeholder': 'Origin Airport'}))
+    destinationplace = forms.ChoiceField(label='Destination',choices=city, required=True,widget=forms.Select(attrs={'class':'myForm ','placeholder': 'Destination Airport '}))
 
 
 cities = (

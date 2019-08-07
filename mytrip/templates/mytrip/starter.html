@@ -233,18 +233,28 @@ padding: 0.5em;
             <br>
             <br>
 
-       <p style="color: red"> {{error}}</p>
-
 	</form>
+
       </div>
-    <div class="row">
+    {%if err == 'err'%}
+
+            <div class="card" style="background: white">
+            <br>
+                <h4 class="text-center" style="color: red">{{error}}</h4>
+                <br>
+            </div>
+                  {%endif%}
+
+     {%if th == 'th'%}
+
+        <div class="row pac-card">
         <h2 class="text-center"><strong>Current Weather</strong></h2>
         <div class="col-md-1"></div>
         <div class="col-md-5">
             {% for origin_city_weather in origin_weather %}
 
-  <div class="w3-card-4" style="width:60%; background-color: white">
-    <header class="w3-container w3-light-grey" style="align-content: center; background-color: aliceblue;padding: 0.5px">
+  <div class="w3-card-4" style="width:100%; background-color: white;border: 1px;">
+    <header class="w3-container w3-light-grey" style="align-content: center; background-color: powderblue;padding: 0.5px">
       <h2 class="text-center">{{origin_city_weather.city}}</h2>
     </header>
     <div class="w3-container row">
@@ -266,8 +276,8 @@ padding: 0.5em;
         <div class="col-md-5">
             {% for destination_city_weather in destination_weather %}
 
-  <div class="w3-card-4" style="width:60%; background-color: white">
-    <header class="w3-container w3-light-grey" style="align-content: center; background-color: aliceblue;padding: 0.5px">
+  <div class="w3-card-4" style="width:100%; background-color: white;border: 1px;">
+    <header class="w3-container w3-light-grey" style="align-content: center; background-color: powderblue;padding: 0.5px">
       <h2 class="text-center">{{destination_city_weather.city}}</h2>
     </header>
     <div class="w3-container row">
@@ -288,8 +298,8 @@ padding: 0.5em;
 
         </div>
 </div>
-     {%if th == 'th'%}
-<div class="row">
+    <br>
+<div class="row pac-card">
    <h2 class="text-center"><strong>Flight Deals for your Trip</strong></h2>
 <div id="table-wrapperF">
           <div id="table-scrollF">
@@ -338,7 +348,10 @@ padding: 0.5em;
     </table>
           </div>
 </div>
-
+</div>
+  <br>
+      <br>
+    <div class="pac-card row">
        <h2 class="text-center"><strong>Directions to your Destination Place</strong></h2>
  {% for map_values in map_json %}
     <div style="display: none">
@@ -347,7 +360,7 @@ padding: 0.5em;
     <b>End: </b>
     <input id="end" type="text" value="{{map_values.end}}">
     </div>
-<div class="row">
+<div class="row pac-card">
     <div class="col-sm-1"></div>
     <div class="col-md-6">
     <div id="map"></div>
@@ -356,8 +369,8 @@ padding: 0.5em;
 
     <div class="col-md-5">
 
-  <div class="w3-card-4" style="width:90%; background-color: white">
-    <header class="w3-container w3-light-grey" style="align-content: center; background-color: aliceblue;padding: 0.5px">
+  <div class="w3-card-4" style="width:90%; background-color: white;border: 1px;">
+    <header class="w3-container w3-light-grey" style="align-content: center; background-color: powderblue;padding: 0.5px">
       <h2 class="text-center">{{map_values.start}} to {{map_values.end}}</h2>
     </header>
     <div class="w3-container row">
@@ -374,8 +387,10 @@ padding: 0.5em;
          </div>
 
     </div>
+</div>
     {% endfor %}
-
+  <br>  <br>
+    <div class="pac-card row">
     <h2 class="text-center"><strong>Hotel Deals at your Destination</strong></h2>
     <div id="table-wrapperH">
     <div id="table-scrollH">
@@ -428,7 +443,9 @@ padding: 0.5em;
 </table>
             </div>
 </div>
-
+</div>
+  <br>
+    <div class="pac-card row">
     <h2 class="text-center"><strong>Resturant recommendations in your destination city</strong></h2>
     <div id="table-wrapper">
           <div id="table-scroll">
@@ -458,6 +475,8 @@ padding: 0.5em;
     {%endif%}
 
 </div>
+    <br>
+    <br>
 </div>
     <script>
       function initMap(directionsService, directionsDisplay) {
