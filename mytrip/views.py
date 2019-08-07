@@ -52,8 +52,8 @@ class flights(TemplateView):
         if form.is_valid():
             input1 = form.cleaned_data['originplace']
             origin, orgcity = input1.split("-")
-            print(origin)
-            print(orgcity)
+            # print(origin)
+            # print(orgcity)
             input2 = form.cleaned_data['destinationplace']
             destination, destcity = input2.split("-")
             url = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/'+ origin + '/' + destination + '/' + (form.cleaned_data['outboundpartialdate']).strftime("%Y-%m-%d")+ '/' + (form.cleaned_data['inboundpartialdate']).strftime("%Y-%m-%d")
@@ -95,8 +95,8 @@ class starter(TemplateView):
         if form.is_valid():
             input1 = form.cleaned_data['originplace']
             origin,orgcity = input1.split("-")
-            print(origin)
-            print(orgcity)
+            # print(origin)
+            # print(orgcity)
             input2 = form.cleaned_data['destinationplace']
             destination,destcity = input2.split("-")
             start = form.cleaned_data['outboundpartialdate'].strftime("%m/%d/%Y")
@@ -142,7 +142,7 @@ class starter(TemplateView):
                     "name": place['Name'],
                 }
                 place_json.append(hotel_area)
-                print(hotel_area)
+                # print(hotel_area)
             for amn in hotel_data["MetaData"]["HotelMetaData"]["Amenities"]:
                 hotel_amn={
                     "code":amn['Code'],
@@ -216,6 +216,7 @@ class starter(TemplateView):
                     flights_data.append(airline_data)
 
                 header = "Below are the Details for you Trip"
+                th="th"
                 context = {
                     'flights_data': flights_data,
                     'origin_weather': origin_weather,
@@ -231,7 +232,8 @@ class starter(TemplateView):
                     "start":start,
                     "end":end,
                     "place_json": place_json,
-                    'zomato': requests.get(zomato_api, headers=zomato_header).json()
+                    'zomato': requests.get(zomato_api, headers=zomato_header).json(),
+                    'th': th,
                     }
 
                 return render(request, self.template_name, context,)
@@ -287,8 +289,8 @@ class weather(TemplateView):
                 for ft in forecast['list']:
                     dates = ft['dt_txt']
                     forecast_date, forecast_time = dates.split(" ")
-                    print(forecast_date)
-                    print(forecast_time)
+                    # print(forecast_date)
+                    # print(forecast_time)
                     forecast_weather = {
                         'temp': ft['main']['temp'],
                         'description': ft['weather'][0]['description'],
@@ -300,7 +302,7 @@ class weather(TemplateView):
                     }
                     # print(forecast_weather)
                     forecast_data.append(forecast_weather)
-                print(forecast_data)
+                # print(forecast_data)
                 context = {
                     'weather_data': weather_data,
                     'form': form,
@@ -340,16 +342,19 @@ class getzomato(TemplateView):
                 header = {"User-agent": "curl/7.43.0", "Accept": "application/json",
                           "user_key": "50bf80e7cc40a8869d99583c024cb58a"}
                 form = ZomatoForm
+                th = "th"
                 context = {
                     'cuisines':cuisines,
                     'data': requests.get(main_api, headers=header).json(),
                     'form': form,
+                    'th': th,
                     }
                 try:
                     context = {
                         'cuisines': cuisines,
                         'data': requests.get(main_api, headers=header).json(),
                         'form': form,
+                        'th': th,
                     }
                 except:
                     pass
@@ -373,7 +378,7 @@ class hotels(TemplateView):
             city = form.cleaned_data['city']
             start = form.cleaned_data['indate'].strftime("%m/%d/%Y")
             end = form.cleaned_data['outdate'].strftime("%m/%d/%Y")
-            print(city, start, end)
+            # print(city, start, end)
             hotel = 'http://api.hotwire.com/v1/search/hotel?apiKey=eew8fwafckbky8563xfyw6te&format=json&startdate='+start+'&enddate='+end+'&dest='+city+'&children=1&adults=2&rooms=1&limit=5'
             hotel_data = requests.get(hotel).json()
             # print(hotel_data)
@@ -392,7 +397,7 @@ class hotels(TemplateView):
                         "name":place['Name'],
                     }
                     place_json.append(hotel_area)
-                    print(hotel_area)
+                    # print(hotel_area)
                 for amn in hotel_data["MetaData"]["HotelMetaData"]["Amenities"]:
                     hotel_amn={
                         "code":amn['Code'],
@@ -411,7 +416,7 @@ class hotels(TemplateView):
                         "link":results['DeepLink'],
                     }
                     hotel_json.append(hotel_values)
-
+                th="th"
                 context = {
                         "form": form,
                         "city": city,
@@ -421,6 +426,7 @@ class hotels(TemplateView):
                         "start": start,
                         "end": end,
                         "place_json":place_json,
+                        "th":th,
 
                     }
 

@@ -27,23 +27,79 @@
       width:35%;
       border:1px solid red;
     }
+        .date{
+        width:200px;
+    }
+    .myForm {
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 1em;
+padding: 0.5em;
+border: 1px solid #ccc;
+border-radius: 3px;
+}
+
+.myForm * {
+box-sizing: border-box;
+}
+
+.myForm input {
+border: 1px solid #ccc;
+border-radius: 3px;
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 0.5em;
+padding: 0.5em;
+}
 
 </style>
 <br>
   <div class="container">
     <h1>Search for places to eat</h1>
     <form method="POST">
-        <table>
-          {% csrf_token %}
-          {{ form|crispy }}
-        <button type="submit" class="btn btn-login">
-                                    search
-                                </button>
-        </table>
-        {{error}}
-    </form>
+        {% csrf_token %}
+        <div class="row">
+            <br>
+            <div class="col-md-1"></div>
 
-  <div>
+            <div class="col-md-3">
+                <h4><strong>Search with Keyword </strong></h4>
+                {{form.searchkeyword}}
+        </div>
+        <!--</div>-->
+<!--<div class="row">-->
+    <!--<br>-->
+            <!--<div class="col-md-1"></div>-->
+		<div class="col-md-3">
+            <h4><strong>Cuisines</strong></h4>
+            {{form.cuisines}}
+        </div>
+<!--</div>-->
+
+        <!--<div class="row">-->
+            <!--<br>-->
+            <!--<div class="col-md-1"></div>-->
+            <div class="col-md-4">
+                <h4><strong>Location</strong></h4>
+                {{form.citiesList}}
+        </div>
+        <!--</div>-->
+        </div>
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-3">
+                <br>
+                <br>
+                <input type="submit" class="btn btn-login" style="width: 150px; height: 45px" name="Search" value="Search">
+            </div>
+            </div>
+
+        </div>
+            <br>
+            <br>
+
+       <p style="color: red"> {{error}}</p>
+    </form>
+      <br>
+         {%if th == 'th'%}
 <div id="table-wrapper">
           <div id="table-scroll">
   <table class="table" style="background-color: white">
@@ -67,6 +123,6 @@
           </div>
 </div>
       <br>
+      {%endif%}
 </div>
-  </div>
 {% endblock %}

@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db import models
 
+
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
@@ -59,13 +60,13 @@ codes = (
     ('JFK-New York', 'John F. Kennedy International Airport- New York'),
 )
 class FlightsForm(forms.Form):
-    originplace = forms.ChoiceField(label='Origin', required=True, choices=codes,)
-    destinationplace = forms.ChoiceField(label='Destination',choices=codes, required=True,)
+    originplace = forms.ChoiceField(label='Origin',required=True, choices=codes,widget=forms.Select(attrs={'class':'myForm ','placeholder': 'Origin Airport'}))
+    destinationplace = forms.ChoiceField(label='Destination',choices=codes, required=True,widget=forms.Select(attrs={'class':'myForm ','placeholder': 'Destination Airport '}))
     outboundpartialdate = forms.DateField(widget=forms.DateInput(
-                attrs={'type': 'date'}
+                attrs={'type': 'date', 'class':'myForm date'}
             ), required=True, label= 'Start Date')
     inboundpartialdate = forms.DateField(widget=forms.DateInput(
-                attrs={'type': 'date'}
+                attrs={'type': 'date','class':'myForm date'}
             ),required=True, label= 'End Date')
 
 
@@ -100,17 +101,17 @@ cities = (
     )
 
 class ZomatoForm(forms.Form):
-    searchkeyword = forms.CharField(required=False)
-    cuisines = forms.CharField(required=False)
-    citiesList = forms.ChoiceField(label='Cities', required=False, choices=cities)
+    searchkeyword = forms.CharField(required=False,widget=forms.TextInput(attrs={'class':'myForm '}))
+    cuisines = forms.CharField(required=False,widget=forms.TextInput(attrs={'class':'myForm '}))
+    citiesList = forms.ChoiceField(label='Cities', required=False, choices=cities,widget=forms.Select(attrs={'class':'myForm '}))
 
 
 class Hotels(forms.Form):
-    city = forms.CharField(required=True, label='Destination City')
+    city = forms.CharField(required=True, label='Destination City',widget=forms.TextInput(attrs={'class':'myForm '}))
     indate = forms.DateField(widget=forms.DateInput(
-                attrs={'type': 'date'}
+                attrs={'type': 'date', 'class':'myForm date'}
             ), required=True, label= 'Start Date')
     outdate = forms.DateField(widget=forms.DateInput(
-                attrs={'type': 'date'}
+                attrs={'type': 'date', 'class':'myForm date'}
             ),required=True, label= 'End Date')
 

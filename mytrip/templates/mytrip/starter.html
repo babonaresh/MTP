@@ -6,8 +6,8 @@
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map {
-        height: 50%;
-          width:50%;
+        height: 80%;
+          width:100%;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
@@ -171,32 +171,80 @@
       width:35%;
       border:1px solid red;
     }
+            .date{
+        width:200px;
+    }
+    .myForm {
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 1em;
+padding: 0.5em;
+border: 1px solid #ccc;
+border-radius: 3px;
+}
+
+.myForm * {
+box-sizing: border-box;
+}
+
+.myForm input {
+border: 1px solid #ccc;
+border-radius: 3px;
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 0.5em;
+padding: 0.5em;
+}
     </style>
 <div class="container">
     <div class="row">
-        <!--<form action="" method="post">-->
-    <!--<label for="l_box1"><input type="radio" name="display_type" value="one" id="l_box1">One Way</label>-->
-    <!--<label for="d_box2"><input type="radio" name="display_type" value="two" id="d_box2">Two Way</label>-->
-    <!--</form>-->
-<div class="col-md-5">
 	<form method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <br>
+            <div class="col-md-1"></div>
 
-			{% csrf_token %}
-            {{form|crispy}}
-			<input type="submit" class="btn btn-login" name="Search" value="Search">
+            <div class="col-md-5">
+                <h4><strong>Origin</strong></h4>
+                {{form.originplace}}
+        </div>
+
+		<div class="col-md-5">
+            <h4><strong>Destination</strong></h4>
+            {{form.destinationplace}}
+        </div>
+        </div>
+        <div class="row">
+            <br>
+            <div class="col-md-1"></div>
+            <div class="col-md-3">
+                <h4><strong>Start Date</strong></h4>
+                {{form.outboundpartialdate}}
+        </div>
+
+		<div class="col-md-3">
+            <h4><strong>Return Date</strong></h4>
+            {{form.inboundpartialdate}}
+        </div>
+            <div class="col-md-3">
+                <br>
+                <br>
+                <input type="submit" class="btn btn-login" style="width: 150px; height: 45px" name="Search" value="Search">
+            </div>
+        </div>
             <br>
             <br>
-
 
        <p style="color: red"> {{error}}</p>
 
 	</form>
       </div>
-        <div class="col-md-6">
-                               {% for origin_city_weather in origin_weather %}
+    <div class="row">
+        <h2 class="text-center"><strong>Current Weather</strong></h2>
+        <div class="col-md-1"></div>
+        <div class="col-md-5">
+            {% for origin_city_weather in origin_weather %}
 
   <div class="w3-card-4" style="width:60%; background-color: white">
-    <header class="w3-container w3-light-grey" style="align-content: center; background-color: aliceblue">
+    <header class="w3-container w3-light-grey" style="align-content: center; background-color: aliceblue;padding: 0.5px">
       <h2 class="text-center">{{origin_city_weather.city}}</h2>
     </header>
     <div class="w3-container row">
@@ -214,10 +262,12 @@
             <br>
 </div>
              {% endfor %}
+        </div>
+        <div class="col-md-5">
             {% for destination_city_weather in destination_weather %}
 
   <div class="w3-card-4" style="width:60%; background-color: white">
-    <header class="w3-container w3-light-grey" style="align-content: center; background-color: aliceblue">
+    <header class="w3-container w3-light-grey" style="align-content: center; background-color: aliceblue;padding: 0.5px">
       <h2 class="text-center">{{destination_city_weather.city}}</h2>
     </header>
     <div class="w3-container row">
@@ -238,8 +288,9 @@
 
         </div>
 </div>
+     {%if th == 'th'%}
 <div class="row">
-    <h2 class="text-center"> {{header}}</h2>
+   <h2 class="text-center"><strong>Flight Deals for your Trip</strong></h2>
 <div id="table-wrapperF">
           <div id="table-scrollF">
     <table class="table" style="background-color: white"  border="1">
@@ -297,11 +348,16 @@
     <input id="end" type="text" value="{{map_values.end}}">
     </div>
 <div class="row">
-    <div id="map" class="col-md-6"></div>
+    <div class="col-sm-1"></div>
     <div class="col-md-6">
+    <div id="map"></div>
+
+</div>
+
+    <div class="col-md-5">
 
   <div class="w3-card-4" style="width:90%; background-color: white">
-    <header class="w3-container w3-light-grey" style="align-content: center; background-color: aliceblue">
+    <header class="w3-container w3-light-grey" style="align-content: center; background-color: aliceblue;padding: 0.5px">
       <h2 class="text-center">{{map_values.start}} to {{map_values.end}}</h2>
     </header>
     <div class="w3-container row">
@@ -399,14 +455,7 @@
     <br>
     <br>
 
-
-
-
-
-     <h2 class="text-center"><strong>Places to visit at your Destination({{destination}})</strong></h2>
-{% for place in places%}
-<li>{{place.Name}}</li>
-{%endfor%}
+    {%endif%}
 
 </div>
 </div>
