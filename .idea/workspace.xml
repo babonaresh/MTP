@@ -1,29 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4a02e0df-f4e7-4ab0-a17e-d55e4f06b0b2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mtp/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/mtp/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mytrip/templates/mytrip/location.html" beforeDir="false" afterPath="$PROJECT_DIR$/mytrip/templates/mytrip/location.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mytrip/templates/mytrip/maps.html" beforeDir="false" afterPath="$PROJECT_DIR$/mytrip/templates/mytrip/maps.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/css/animations.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/css/images/Byzantium.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/css/images/header2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/css/images/logo-wide.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/css/images/logo.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/css/media-queries.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/css/style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/css/styling.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/css/worldmap.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/images/Denver.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/images/SanFran.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/images/facebook.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/images/header.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/js/jquery.smoothscroll.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/js/js.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/worldmap/static/js/worldmap.js" beforeDir="false" />
-    </list>
+    <list default="true" id="4a02e0df-f4e7-4ab0-a17e-d55e4f06b0b2" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -584,7 +562,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18835099" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
