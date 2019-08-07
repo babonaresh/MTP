@@ -2,22 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4a02e0df-f4e7-4ab0-a17e-d55e4f06b0b2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/mytrip/static/images/direction.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mytrip/static/images/flight.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mytrip/static/images/flight.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mytrip/static/images/food.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mytrip/static/images/hotel.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mytrip/static/images/location.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mytrip/static/images/plan.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mytrip/static/images/weather.gif" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mytrip/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/mytrip/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mytrip/templates/mytrip/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/mytrip/templates/mytrip/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mytrip/templates/mytrip/hotels.html" beforeDir="false" afterPath="$PROJECT_DIR$/mytrip/templates/mytrip/hotels.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mytrip/templates/mytrip/location.html" beforeDir="false" afterPath="$PROJECT_DIR$/mytrip/templates/mytrip/location.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mytrip/templates/mytrip/starter.html" beforeDir="false" afterPath="$PROJECT_DIR$/mytrip/templates/mytrip/starter.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mytrip/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/mytrip/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mytrip/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/mytrip/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -133,7 +118,7 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="html" value="16" />
-          <entry key="py" value="27" />
+          <entry key="py" value="28" />
           <entry key="txt" value="1" />
         </counts>
       </usages-collector>
@@ -141,7 +126,7 @@
         <counts>
           <entry key="HTML" value="16" />
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="27" />
+          <entry key="Python" value="28" />
         </counts>
       </usages-collector>
     </session>
@@ -169,18 +154,6 @@
                 <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#a#0;n#div#0;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mtp/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="161">
-              <caret line="15" selection-start-line="15" selection-end-line="15" />
-              <folding>
-                <element signature="e#627#659#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -240,7 +213,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mytrip/templates/mytrip/starter.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="300">
@@ -265,6 +238,15 @@
                 <element signature="e#11320#11338#0#HTML" expanded="true" />
                 <element signature="e#11670#11701#0#HTML" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/mytrip/forms.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="73" column="27" selection-start-line="73" selection-start-column="27" selection-end-line="73" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -301,7 +283,6 @@
         <option value="$PROJECT_DIR$/mytrip/templates/mytrip/home.html" />
         <option value="$PROJECT_DIR$/mytrip/static/css/index.css" />
         <option value="$PROJECT_DIR$/mytrip/templates/registration/login.html" />
-        <option value="$PROJECT_DIR$/mytrip/forms.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/mytrip/templates/worldmap/base.html" />
         <option value="$PROJECT_DIR$/mytrip/models.py" />
@@ -315,6 +296,7 @@
         <option value="$PROJECT_DIR$/mytrip/views.py" />
         <option value="$PROJECT_DIR$/mytrip/templates/mytrip/maps.html" />
         <option value="$PROJECT_DIR$/mytrip/templates/mytrip/location.html" />
+        <option value="$PROJECT_DIR$/mytrip/forms.py" />
       </list>
     </option>
   </component>
@@ -596,8 +578,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18835099" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18835099" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -610,7 +593,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.3289689" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.4969743" visible="true" weight="0.23567921" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.4969743" visible="true" weight="0.23567921" />
       <window_info anchor="bottom" id="Python Console" order="11" />
       <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5030257" side_tool="true" weight="0.23567921" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -763,13 +746,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mytrip/static/css/index.css" />
-    <entry file="file://$PROJECT_DIR$/mytrip/forms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="24" selection-start-line="24" selection-end-line="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mytrip/templates/registration/login.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
@@ -973,6 +949,13 @@
             <element signature="e#11320#11338#0#HTML" expanded="true" />
             <element signature="e#11670#11701#0#HTML" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mytrip/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="73" column="27" selection-start-line="73" selection-start-column="27" selection-end-line="73" selection-end-column="27" />
         </state>
       </provider>
     </entry>
