@@ -1,13 +1,15 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import *
-from .forms import LoginForm,UserRegistrationForm, CityForm, FlightsForm, ZomatoForm, Hotels, Location
+from .forms import LoginForm,UserRegistrationForm, CityForm, FlightsForm, ZomatoForm, Hotels, Location, SMS
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
 import requests
 from django.conf import settings
 from django.http import JsonResponse
+from twilio.rest import Client
+import twilio.rest
 
 # now = timezone.now()
 def home(request):
@@ -42,13 +44,16 @@ class flights(TemplateView):
         #         form = FlightsFormOne()
         #         return render(request, self.template_name, {'form': form})
         #     else:
+                smsform = SMS()
                 form = FlightsForm()
-                return render(request, self.template_name, {'form': form})
+                return render(request, self.template_name, {'form': form},{'smsform':smsform})
 
     def post(self, request):
         data = {}
         # if request.method == 'POST':
         form = FlightsForm(request.POST)
+        smsform = SMS(request.POST)
+        flights_data = []
         if form.is_valid():
             input1 = form.cleaned_data['originplace']
             origin, orgcity = input1.split("-")
@@ -56,28 +61,90 @@ class flights(TemplateView):
             # print(orgcity)
             input2 = form.cleaned_data['destinationplace']
             destination, destcity = input2.split("-")
+
             url = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/'+ origin + '/' + destination + '/' + (form.cleaned_data['outboundpartialdate']).strftime("%Y-%m-%d")+ '/' + (form.cleaned_data['inboundpartialdate']).strftime("%Y-%m-%d")
             headers = {'X-RapidAPI-Key': settings.RAPIDAPI_API_KEY}
             api_response = requests.get(url, headers=headers)
+            flights_json = api_response.json()
             if api_response.status_code == 200:
                 form = FlightsForm()
                 header= "Below are the Details for you Trip"
+                for quote in flights_json['Quotes']:
+                    # if quote['InboundLeg']['CarrierIds']== or  quote['OutboundLeg']['CarrierIds'] ==
+                    airline_data={
+                        'id':quote['QuoteId'],
+                            'origin': origin,
+                                'airportorigin': flights_json['Places'][1]['Name'],
+                                'destination': destination,
+                                'airportdest': flights_json['Places'][0]['Name'],
+                                'startdate': quote['OutboundLeg']['DepartureDate'],
+                                'returndate': quote['InboundLeg']['DepartureDate'],
+                                'price': quote['MinPrice'],
+                                'incarrier': quote['InboundLeg']['CarrierIds'],
+                                'outcarrier': quote['OutboundLeg']['CarrierIds'],
+                                 'carrier':flights_json['Carriers'],
+                                'symbol': flights_json['Currencies'][0]['Symbol'],
+                            }
+                    flights_data.append(airline_data)
+                th= 'th'
                 context = {
                     'origin': origin,
                     'destination': destination,
-                    'data': api_response.json(),
+                    'flights_data': flights_data,
                     'form': form,
+                    'smsform':smsform,
                     'header': header,
+                    'th':th,
                 }
+
                 return render(request, self.template_name, context)
             else:
-                error = 'Please Check the Details you entered'
+                error = 'Please Check the Dates you entered'
                 form = FlightsForm()
                 context = {
                     'error' : error,
                     'form' : form,
-                }
-                return render(request, self.template_name,context)
+                   }
+                return render(request, self.template_name,context,)
+        if smsform.is_valid():
+
+            print(smsform.cleaned_data['body'])
+            print(smsform.cleaned_data['phone'])
+            account_sid = 'AC5b8851457d8da824d607170b838d4f7b'
+            auth_token = 'd7afab61073fd9dd8b9a9e37c83eb961'
+            client = Client(account_sid, auth_token)
+            message = client.messages.create(
+                body=smsform.cleaned_data['body'],
+                from_='+15313018813',
+                to=smsform.cleaned_data['phone'],
+            )
+            print(message)
+            msg='msg'
+            context = {
+                'msg': msg,
+                'message': 'SMS successful',
+                'form': form,
+                'smsform': smsform,
+                'flights_data':flights_data,
+            }
+            return render(request, self.template_name, context, )
+
+        else:
+            msg = 'msg'
+            error = 'Please Check the Details you entered'
+            form = FlightsForm()
+            context = {
+                'msg': msg,
+                'error' : error,
+                'form' : form,
+            }
+            return render(request, self.template_name,context)
+
+
+def smsform(request):
+        smsform = SMS(request.POST)
+
+
 
 class starter(TemplateView):
     template_name = 'mytrip/starter.html'

@@ -102,6 +102,9 @@ class Location(forms.Form):
     originplace = forms.ChoiceField(label='Origin',required=True, choices=city,widget=forms.Select(attrs={'class':'myForm ','placeholder': 'Origin Airport'}))
     destinationplace = forms.ChoiceField(label='Destination',choices=city, required=True,widget=forms.Select(attrs={'class':'myForm ','placeholder': 'Destination Airport '}))
 
+class SMS(forms.Form):
+    phone = forms.CharField(label='Number',required=True,widget=forms.TextInput(attrs={'class':'myForm '}))
+    body = forms.CharField(label='body', required=True,widget=forms.TextInput(attrs={'class':'myForm '}))
 
 cities = (
         ('', 'Select a City'),

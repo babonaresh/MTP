@@ -92,42 +92,91 @@ padding: 0.5em;
             <br>
             <br>
 
-       <p style="color: red"> {{error}}</p>
+
 
 	</form>
+
+            {%if msg == 'msg'%}
+
+            <div class="card" style="background: white">
+            <br>
+                <h4 class="text-center" style="color: red"> {{message}}</h4>
+                <h4 class="text-center" style="color: red">{{error}}</h4>
+                <br>
+            </div>
+                  {%endif%}
 </div>
 <div class="row">
-
+{%if th == 'th'%}
     <h2 class="text-center"> {{header}}</h2>
-    {% for quote in data.Quotes %}
-<div id="table-wrapper">
-          <div id="table-scroll">
-    <table class="table" style="background-color: white">
+<div id="table-wrapperF">
+          <div id="table-scrollF">
+    <table class="table" style="background-color: white"  border="1">
         <thead>
-        <th>Airlines</th>
+        <th>Out Airlines</th>
         <th>Origin Airport</th>
+        <th>In Airlines</th>
         <th>Destination Airport</th>
         <th>Start Date</th>
         <th>Return Date</th>
         <th>Price</th>
+        <th>SMS</th>
         </thead>
+        {% for airline_data in flights_data %}
         <tbody>
-        <td>{{data.Carriers.0.Name}}</td>
-        <td>{{ origin }} - {{data.Places.1.Name}}</td>
-        <td> {{destination}} - {{data.Places.0.Name}}</td>
-        <td>{{quote.OutboundLeg.DepartureDate}}</td>
-        <td>{{quote.InboundLeg.DepartureDate }}</td>
-        <td>Price: {{quote.MinPrice}}{{data.Currencies.0.Symbol}}</td>
-        </tbody>
-    </table>
-    <!--{{ origin }} {{destination}}-->
-		<!--<div>{{data.Carriers.0.Name}}</div>-->
-		<!--<div>{{quote.OutboundLeg.OriginId}} -> {{quote.OutboundLeg.DestinationId}}</div>-->
-		<!--<div>{{quote.OutboundLeg.DepartureDate}}</div>-->
-		<!--<div>Price: {{quote.MinPrice}}{{data.Currencies.0.Symbol}}</div>-->
-	{% endfor %}
+        <td>
+            {% for carriers in airline_data.carrier%}
+        {% for outcarriers in airline_data.outcarrier%}
+            {% if carriers.CarrierId == outcarriers %}
+                {{carriers.Name}}
 
-	<!--{{data}}-->
+            {%endif%}
+            {%endfor%}
+        {%endfor%}
+        </td>
+
+
+        <td>{{ airline_data.origin }} - {{airline_data.airportorigin}}</td>
+        <td>
+            {% for carriers in airline_data.carrier%}
+        {% for incarriers in airline_data.incarrier%}
+            {% if carriers.CarrierId == incarriers %}
+                {{carriers.Name}}
+
+            {%endif%}
+            {%endfor%}
+        {%endfor%}
+        </td>
+
+        <td> {{airline_data.destination}} - {{airline_data.airportdest}}</td>
+        <td>{{airline_data.startdate}}</td>
+        <td>{{airline_data.returndate }}</td>
+        <td>{{airline_data.symbol}}{{airline_data.price}}</td>
+        <td><form method="POST">
+            <h6><strong>Phone Number to get a text</strong></h6>
+                    {% csrf_token %}
+                {{ smsform.phone }}
+                <input type="text" style="display: none" name="body" class="myForm" value="{{ origin }} to {{ destination }} Dates: ({{airline_data.startdate}} and {{airline_data.returndate }}),-${{airline_data.price}} ">
+            <input type="submit" class="btn btn-login" style="width: 150px; height: 45px" name="Search" value="Send SMS"></form></td>
+        </tbody>
+        {% endfor %}
+    </table>
+          </div>
+</div>
+{% endif %}
+{#<form method="POST">#}
+{#                <div class="col-md-3">#}
+{#               <h4><strong>Phone Number to get a text</strong></h4>#}
+{#                    {% csrf_token %}#}
+{#                {{ smsform.phone }}#}
+{#                <input type="text" name="body" class="myForm" value="{{ airline_data.origin}} to {{airline_data.destination }} - {{ airline_data.startdate }} and {{airline_data.returndate }}-${{airline_data.price}} ">#}
+{#<input type="submit" class="btn btn-login" style="width: 150px; height: 45px" name="Search" value="Send SMS">#}
+{#            </div>#}
+{#</form>#}
+
+
+
+
 </div>
 </div>
 </div>
