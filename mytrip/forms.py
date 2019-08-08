@@ -72,7 +72,6 @@ city = (
     ('',''),
     ('San Francisco', 'San Francisco'),
     ('Chicago', 'Chicago'),
-    ('Chicago', 'Chicago'),
     ('Miami', 'Miami'),
     ('Denver', 'Denver'),
     ('Atlanta', 'Atlanta'),
