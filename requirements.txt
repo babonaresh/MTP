@@ -25,6 +25,6 @@ social-auth-core==3.2.0
 sqlparse==0.3.0
 text-unidecode==1.2
 twilio==6.29.2
-urllib3==1.23
+urllib3==1.26.5
 whitenoise==4.1
 Wikipedia-API==0.3.4
